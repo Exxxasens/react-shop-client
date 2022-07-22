@@ -4,14 +4,18 @@
     "description": "",
     "main": "/build/index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "start": "webpack serve --config webpack/webpack.config.js --env env=dev",
+        "build": "webpack --config webpack/webpack.config.js --env env=prod",
+        "lint": "eslint --fix \"./src/**/*.{js,jsx,ts,tsx,json}\"",
+        "format": "prettier --write \"./src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "dependencies": {
         "react": "^18.2.0",
-        "react-dom": "^18.2.0"
+        "react-dom": "^18.2.0",
+        "styled-components": "^5.3.5"
     },
     "devDependencies": {
         "@babel/core": "^7.12.16",
@@ -23,6 +27,7 @@
         "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
         "@types/react": "^17.0.2",
         "@types/react-dom": "^17.0.1",
+        "@types/styled-components": "^5.1.25",
         "@typescript-eslint/eslint-plugin": "^4.15.0",
         "@typescript-eslint/parser": "^4.15.0",
         "babel-loader": "^8.2.2",
