@@ -7,6 +7,8 @@ import Login from '../Login';
 import Register from '../Register';
 import PageLayout from '../../layouts/PageLayout';
 import AuthLayout from '../../layouts/AuthLayout';
+import UserSidebarLayout from '../../layouts/UserSidebarLayout';
+import UserAddress from '../../pages/UserAddress';
 
 const AppContainer = styled(ColumnContainer)`
     min-height: 100vh;
@@ -26,6 +28,10 @@ const App = () => {
                         <Route index element={<Navigate to="login" />} />
                         <Route path="login" element={<Login />} />
                         <Route path="register" element={<Register />} />
+                    </Route>
+                    <Route path="user" element={<UserSidebarLayout />}>
+                        <Route index element={<UserAddress />} />
+                        <Route path="address" element={<UserAddress />} />
                     </Route>
                 </Routes>
             </AppContainer>

@@ -52,7 +52,7 @@ const Header = () => {
                             </IconButton>
                         )}
                     </NavLink>
-                    <NavLink to="/auth">
+                    <NavLink to="/user">
                         {({ isActive }) => (
                             <IconButton
                                 icon={<FiUser />}
