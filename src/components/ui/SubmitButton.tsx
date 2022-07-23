@@ -1,7 +1,11 @@
 import styled from 'styled-components';
 import Button from './Button';
 
-const SubmitButton = styled(Button)`
+interface SubmitButtonProps {
+    disabled?: boolean;
+}
+
+const SubmitButton = styled(Button)<SubmitButtonProps>`
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -22,6 +26,12 @@ const SubmitButton = styled(Button)`
         margin: 0 auto 0 0;
         visibility: hidden;
     }
+    ${(props) =>
+        props.disabled &&
+        `
+        color: var(--text-color);
+        background: var(--primary-light-color);
+    `}
 `;
 
 export default SubmitButton;

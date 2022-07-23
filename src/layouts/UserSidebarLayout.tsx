@@ -1,18 +1,29 @@
 import RowContainer from '../components/ui/RowContainer';
-import { Sidebar, SidebarLink } from '../components/Sidebar';
+import {
+    Sidebar,
+    SidebarLink,
+    SidebarTag,
+    SidebarTagLoading
+} from '../components/Sidebar';
 import { FiPackage, FiMapPin, FiEdit, FiLogOut } from 'react-icons/fi';
 import { Outlet } from 'react-router-dom';
-import SidebarTag from '../components/Sidebar/SidebarTag';
+import useAuth from '../components/hooks/useAuth';
 
 interface UserSidebarLayoutProps {
     children?: React.ReactNode | React.ReactNode[];
 }
 
 const UserSidebarLayout = ({ children }: UserSidebarLayoutProps) => {
+    const { user, isLoading } = useAuth();
+
     return (
         <RowContainer style={{ flexGrow: 1 }}>
             <Sidebar style={{ gap: '1rem' }}>
-                <SidebarTag name="Олег" />
+                {isLoading ? (
+                    <SidebarTagLoading />
+                ) : (
+                    user && <SidebarTag name={user.name} />
+                )}
                 <SidebarLink
                     to="order"
                     title="Мои заказы"
@@ -30,7 +41,7 @@ const UserSidebarLayout = ({ children }: UserSidebarLayoutProps) => {
                     icon={<FiEdit />}
                 />
                 <SidebarLink
-                    to="account"
+                    to="/auth/logout"
                     title="Выход"
                     icon={<FiLogOut />}
                     style={{ marginTop: 'auto' }}

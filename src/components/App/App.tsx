@@ -9,6 +9,9 @@ import PageLayout from '../../layouts/PageLayout';
 import AuthLayout from '../../layouts/AuthLayout';
 import UserSidebarLayout from '../../layouts/UserSidebarLayout';
 import UserAddress from '../../pages/UserAddress';
+import RegisterSuccess from '../../pages/RegisterSuccess';
+import { Provider } from 'react-redux';
+import { store } from '../../store';
 
 const AppContainer = styled(ColumnContainer)`
     min-height: 100vh;
@@ -17,24 +20,30 @@ const AppContainer = styled(ColumnContainer)`
 const App = () => {
     return (
         <BrowserRouter>
-            <AppContainer>
-                <Header></Header>
-                <Routes>
-                    <Route
-                        path="cart"
-                        element={<PageLayout title="Корзина" />}
-                    />
-                    <Route path="auth" element={<AuthLayout />}>
-                        <Route index element={<Navigate to="login" />} />
-                        <Route path="login" element={<Login />} />
-                        <Route path="register" element={<Register />} />
-                    </Route>
-                    <Route path="user" element={<UserSidebarLayout />}>
-                        <Route index element={<UserAddress />} />
-                        <Route path="address" element={<UserAddress />} />
-                    </Route>
-                </Routes>
-            </AppContainer>
+            <Provider store={store}>
+                <AppContainer>
+                    <Header></Header>
+                    <Routes>
+                        <Route
+                            path="cart"
+                            element={<PageLayout title="Корзина" />}
+                        />
+                        <Route path="auth" element={<AuthLayout />}>
+                            <Route index element={<Navigate to="login" />} />
+                            <Route path="login" element={<Login />} />
+                            <Route path="register" element={<Register />} />
+                        </Route>
+                        <Route path="user" element={<UserSidebarLayout />}>
+                            <Route index element={<UserAddress />} />
+                            <Route path="address" element={<UserAddress />} />
+                        </Route>
+                        <Route
+                            path="register/success"
+                            element={<RegisterSuccess />}
+                        />
+                    </Routes>
+                </AppContainer>
+            </Provider>
         </BrowserRouter>
     );
 };

@@ -1,14 +1,22 @@
+import React from 'react';
 import ColumnContainer from '../ui/ColumnContainer';
 import InputContainer from '../ui/InputContainer';
 import InputLabel from '../ui/InputLabel';
 import Input from '../ui/Input';
 import SubmitButton from '../ui/SubmitButton';
-import { Link } from 'react-router-dom';
-import { AuthCard, AuthText, AuthTitle, AuthMessage } from '../ui/AuthCard';
+import { Link, useNavigate } from 'react-router-dom';
+import {
+    AuthCard,
+    AuthText,
+    AuthTitle,
+    AuthMessage,
+    SubmitMessage
+} from '../ui/AuthCard';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as zod from 'zod';
 import RowInputContainer from '../ui/RowInputContainer';
+import { useRegisterMutation } from '../../api/authApi';
 
 const emptyStringMessage = 'Поле обязательное для заполнения';
 
@@ -22,6 +30,7 @@ const registerSchema = zod.object({
 const resolver = zodResolver(registerSchema);
 
 const Register = () => {
+    const [error, setError] = React.useState<string | null>('');
     const {
         register,
         handleSubmit,
@@ -35,8 +44,22 @@ const Register = () => {
             password: ''
         }
     });
+    const navigate = useNavigate();
+    const [registerUser, { isLoading }] = useRegisterMutation();
 
-    function onSubmit() {}
+    function onSubmit(data: RegisterSchema) {
+        registerUser(data)
+            .unwrap()
+            .then(() => {
+                navigate('/register/success');
+            })
+            .catch((error) => {
+                if (error.data && error.data.message) {
+                    return setError(error.data.message);
+                }
+                setError('Произошла неизвестная ошибка');
+            });
+    }
 
     return (
         <AuthCard>
@@ -92,6 +115,7 @@ const Register = () => {
                         </AuthMessage>
                     )}
                 </InputContainer>
+                {error && <SubmitMessage type="error">{error}</SubmitMessage>}
                 <SubmitButton>Регистрация</SubmitButton>
             </ColumnContainer>
         </AuthCard>

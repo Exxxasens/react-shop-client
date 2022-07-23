@@ -1,29 +1,69 @@
+import React from 'react';
 import ColumnContainer from '../ui/ColumnContainer';
 import InputContainer from '../ui/InputContainer';
 import InputLabel from '../ui/InputLabel';
 import Input from '../ui/Input';
 import SubmitButton from '../ui/SubmitButton';
-import { Link } from 'react-router-dom';
-import { AuthCard, AuthText, AuthTitle, AuthMessage } from '../ui/AuthCard';
+import { Link, useNavigate } from 'react-router-dom';
+import {
+    AuthCard,
+    AuthText,
+    AuthTitle,
+    AuthMessage,
+    SubmitMessage
+} from '../ui/AuthCard';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useLoginMutation } from '../../api/authApi';
 import * as zod from 'zod';
 
 const loginSchema = zod.object({
-    email: zod.string().min(1, 'Поле обязательное для заполнения'),
+    email: zod
+        .string()
+        .email('Некорректная почта')
+        .min(1, 'Поле обязательное для заполнения'),
     password: zod.string().min(1, 'Поле обязательное для заполнения')
 });
 
 const resolver = zodResolver(loginSchema);
 
 const Login = () => {
+    const [error, setError] = React.useState<string | null>('');
     const {
         register,
         handleSubmit,
-        formState: { errors }
+        formState: { errors },
+        getValues,
+        watch,
+        reset
     } = useForm<LoginSchema>({ resolver });
 
-    function onSubmit() {}
+    const navigate = useNavigate();
+    const [login, { isLoading }] = useLoginMutation();
+
+    watch(
+        React.useCallback(() => {
+            if (error) {
+                setError(null);
+            }
+        }, [error])
+    );
+
+    function onSubmit(values: LoginSchema) {
+        setError(null);
+        reset({ ...getValues(), password: '' });
+        login(values)
+            .unwrap()
+            .then(() => {
+                navigate('/');
+            })
+            .catch((error) => {
+                if (error.data && error.data.message) {
+                    return setError(error.data.message);
+                }
+                setError('Произошла неизвестная ошибка');
+            });
+    }
 
     return (
         <AuthCard>
@@ -64,7 +104,8 @@ const Login = () => {
                         </AuthMessage>
                     )}
                 </InputContainer>
-                <SubmitButton>Войти</SubmitButton>
+                {error && <SubmitMessage type="error">{error}</SubmitMessage>}
+                <SubmitButton disabled={isLoading}>Войти</SubmitButton>
             </ColumnContainer>
         </AuthCard>
     );

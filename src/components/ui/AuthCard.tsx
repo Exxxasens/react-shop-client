@@ -5,7 +5,7 @@ import Message from './Message';
 export const AuthCard = styled(Card)`
     display: flex;
     flex-direction: column;
-    max-width: 380px;
+    max-width: 420px;
     width: 100%;
 `;
 
@@ -29,4 +29,9 @@ export const AuthMessage = styled(Message)`
     font-weight: 300;
     margin-left: 0.25rem;
     margin-top: 0.25rem;
+`;
+
+export const SubmitMessage = styled(AuthMessage)`
+    font-weight: bold;
+    margin-top: -1rem;
 `;

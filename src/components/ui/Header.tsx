@@ -6,6 +6,7 @@ import RowContainer from './RowContainer';
 import IconButton from './IconButton';
 import { FiShoppingCart, FiUser, FiAlignJustify } from 'react-icons/fi';
 import { NavLink } from 'react-router-dom';
+import useAppSelector from '../hooks/useAppSelector';
 
 interface HeaderContainerProps {
     alignContent?: string;
@@ -30,6 +31,8 @@ const HeaderContainer = styled(RowContainer)`
 `;
 
 const Header = () => {
+    const token = useAppSelector((state) => state.auth.token);
+
     return (
         <HeaderContainer>
             <HeaderContainter alignContent="left">
@@ -52,16 +55,30 @@ const Header = () => {
                             </IconButton>
                         )}
                     </NavLink>
-                    <NavLink to="/user">
-                        {({ isActive }) => (
-                            <IconButton
-                                icon={<FiUser />}
-                                variant={isActive ? 'active' : 'default'}
-                            >
-                                Войти
-                            </IconButton>
-                        )}
-                    </NavLink>
+                    {!token && (
+                        <NavLink to="/auth">
+                            {({ isActive }) => (
+                                <IconButton
+                                    icon={<FiUser />}
+                                    variant={isActive ? 'active' : 'default'}
+                                >
+                                    Войти
+                                </IconButton>
+                            )}
+                        </NavLink>
+                    )}
+                    {token && (
+                        <NavLink to="/user">
+                            {({ isActive }) => (
+                                <IconButton
+                                    icon={<FiUser />}
+                                    variant={isActive ? 'active' : 'default'}
+                                >
+                                    Аккаунт
+                                </IconButton>
+                            )}
+                        </NavLink>
+                    )}
                 </RowContainer>
             </HeaderContainter>
         </HeaderContainer>

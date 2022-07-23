@@ -15,11 +15,15 @@ const Tag = styled(ColumnContainer)`
 const Name = styled.div`
     color: var(--primary-color);
     font-weight: bold;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
     //margin-top: 0.25rem;
 `;
 
 const Text = styled.div`
     font-weight: bold;
+    width: 100%;
 `;
 
 const SidebarTag = ({ name }: SidebarTagProps) => {

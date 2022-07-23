@@ -1,3 +1,4 @@
+import React from 'react';
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 import ColumnContainer from '../components/ui/ColumnContainer';
@@ -10,10 +11,14 @@ export interface PageLaoutProps {
     title?: string;
 }
 
-const PageLayout = ({ title }: PageLaoutProps) => {
+const PageLayout = ({
+    title,
+    children
+}: React.PropsWithChildren<PageLaoutProps>) => {
     return (
         <ColumnContainer style={{ margin: '1rem 2rem' }}>
             {title && <Header>{title}</Header>}
+            {children}
             <Outlet />
         </ColumnContainer>
     );

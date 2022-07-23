@@ -15,6 +15,16 @@ declare global {
         lastname: string;
         password: string;
     }
+    interface IUser {
+        _id: string;
+        email: string;
+        name: string;
+        lastname: string;
+    }
+    interface HttpException {
+        status: number;
+        message: string;
+    }
 }
 
 export {};
