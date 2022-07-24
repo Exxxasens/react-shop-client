@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { authApi, useLoginMutation } from '../../api/authApi';
 import { userApi } from '../../api/userApi';
 
 interface AuthState {
@@ -23,10 +22,16 @@ const initialState: AuthState = {
 const authSlice = createSlice({
     name: 'auth',
     initialState,
-    reducers: {},
+    reducers: {
+        logout(state) {
+            state.token = null;
+            state.user = null;
+            setToken('');
+        }
+    },
     extraReducers: (builder) => {
         builder.addMatcher(
-            authApi.endpoints.login.matchFulfilled,
+            userApi.endpoints.login.matchFulfilled,
             (state, { payload }) => {
                 state.token = payload.token;
                 state.user = payload.user;
@@ -43,5 +48,5 @@ const authSlice = createSlice({
 });
 
 export const authReducer = authSlice.reducer;
-export const authActions = authSlice.actions;
+export const { logout } = authSlice.actions;
 export default authSlice;

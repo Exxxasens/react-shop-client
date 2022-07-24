@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 interface MessageProps {
-    type: 'success' | 'error';
+    type: 'success' | 'error' | 'info';
 }
 
 const Message = styled.div<MessageProps>`

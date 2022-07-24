@@ -8,7 +8,7 @@ export const Card = styled.div`
 `;
 
 export const CardTitle = styled.h2`
-    margin: 2rem 0;
+    margin: 1rem 0;
 `;
 
 export const CardText = styled.div`

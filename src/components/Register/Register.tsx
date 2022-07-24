@@ -16,7 +16,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as zod from 'zod';
 import RowInputContainer from '../ui/RowInputContainer';
-import { useRegisterMutation } from '../../api/authApi';
+import { useRegisterMutation } from '../../api/userApi';
 
 const emptyStringMessage = 'Поле обязательное для заполнения';
 

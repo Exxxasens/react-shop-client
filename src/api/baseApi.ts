@@ -5,7 +5,7 @@ import {
     fetchBaseQuery
 } from '@reduxjs/toolkit/query/react';
 import { RootStore } from '../store';
-import { HttpException } from './HttpException';
+import { logout } from '../store/slices/authSlice';
 
 const baseQuery = fetchBaseQuery({
     baseUrl: 'http://localhost:3000/api',
@@ -25,13 +25,16 @@ const baseQueryWithErrorHandler = async (
     extraOptions: {}
 ) => {
     let result = await baseQuery(args, api, extraOptions);
-
-    if (result?.error) {
-        if (result.error.data && result.error.data) {
-            // TODO: LOGOUT HERE
+    if (result.error && result.error.data) {
+        const { message } = result.error.data as ErrorResponse;
+        if (
+            result.error.status === 401 &&
+            message === 'Срок действия токена истек'
+        ) {
+            api.dispatch(logout());
         }
+        throw new Error(message);
     }
-
     return result;
 };
 

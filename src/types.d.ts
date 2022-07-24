@@ -15,13 +15,29 @@ declare global {
         lastname: string;
         password: string;
     }
+    interface UpdatePasswordSchema {
+        password: string;
+        newPassword: string;
+        repeatPassword: string;
+    }
     interface IUser {
         _id: string;
         email: string;
         name: string;
         lastname: string;
     }
-    interface HttpException {
+    interface IAddress {
+        _id: string;
+        city: string;
+        street: string;
+        building: string;
+        postCode: string;
+    }
+    interface IMessage {
+        type: 'error' | 'info' | 'success';
+        text: string;
+    }
+    interface ErrorResponse {
         status: number;
         message: string;
     }

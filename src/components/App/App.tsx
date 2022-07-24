@@ -9,6 +9,7 @@ import PageLayout from '../../layouts/PageLayout';
 import AuthLayout from '../../layouts/AuthLayout';
 import UserSidebarLayout from '../../layouts/UserSidebarLayout';
 import UserAddress from '../../pages/UserAddress';
+import UserAccount from '../../pages/UserAccount';
 import RegisterSuccess from '../../pages/RegisterSuccess';
 import { Provider } from 'react-redux';
 import { store } from '../../store';
@@ -36,6 +37,7 @@ const App = () => {
                         <Route path="user" element={<UserSidebarLayout />}>
                             <Route index element={<UserAddress />} />
                             <Route path="address" element={<UserAddress />} />
+                            <Route path="account" element={<UserAccount />} />
                         </Route>
                         <Route
                             path="register/success"

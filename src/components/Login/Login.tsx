@@ -14,7 +14,7 @@ import {
 } from '../ui/AuthCard';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useLoginMutation } from '../../api/authApi';
+import { useLoginMutation } from '../../api/userApi';
 import * as zod from 'zod';
 
 const loginSchema = zod.object({

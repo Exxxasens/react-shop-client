@@ -13,7 +13,6 @@ const SubmitButton = styled(Button)<SubmitButtonProps>`
     font-size: 1rem;
     background: var(--primary-color);
     color: var(--primary-light-color);
-    font-weight: bold;
     &::after,
     &::before {
         content: '→';
