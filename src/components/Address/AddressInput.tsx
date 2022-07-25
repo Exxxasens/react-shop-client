@@ -64,7 +64,12 @@ interface AddressInputProps extends React.ComponentProps<typeof Input> {
     onSuggestion?: (suggestion: AddressSuggestion) => void;
 }
 
-const AddressInput: React.FC<AddressInputProps> = ({ onSuggestion, onFocus, ...rest }) => {
+const AddressInput: React.FC<AddressInputProps> = ({
+    onSuggestion,
+    onFocus,
+    onChange,
+    ...rest
+}) => {
     const [value, setValue] = React.useState<string>('');
     const [isFocused, setFocused] = React.useState(false);
     const [suggestions, setSuggestions] = React.useState<AddressSuggestion[]>([]);
@@ -72,6 +77,7 @@ const AddressInput: React.FC<AddressInputProps> = ({ onSuggestion, onFocus, ...r
 
     function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
         setValue(e.target.value);
+        if (onChange) onChange(e);
     }
 
     React.useEffect(() => {

@@ -28,6 +28,7 @@ declare global {
     }
     interface IAddress {
         _id: string;
+        region: string;
         city: string;
         street: string;
         building: string;

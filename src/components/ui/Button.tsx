@@ -30,6 +30,12 @@ const Button = styled.button<ButtonProps>`
         box-shadow: var(--primary-shadow);
     }
 
+    &:disabled:hover {
+        background: var(--background-color);
+        color: var(--text-color);
+        box-shadow: none;
+    }
+
     ${({ variant }) =>
         variant === 'active' &&
         `

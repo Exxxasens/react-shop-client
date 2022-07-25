@@ -13,14 +13,14 @@ interface UpdatePasswordBody {
 export const userApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         login: builder.mutation<LoginResponse, LoginSchema>({
-            query: (body: LoginSchema) => ({
+            query: (body) => ({
                 url: '/user/login',
                 method: 'POST',
                 body
             })
         }),
         register: builder.mutation<IUser, RegisterSchema>({
-            query: (body: RegisterSchema) => ({
+            query: (body) => ({
                 url: '/user/register',
                 method: 'POST',
                 body
@@ -33,10 +33,29 @@ export const userApi = baseApi.injectEndpoints({
             })
         }),
         updatePassword: builder.mutation<IUser, UpdatePasswordBody>({
-            query: (body: UpdatePasswordSchema) => ({
+            query: (body) => ({
                 url: '/user/password',
                 method: 'PUT',
                 body
+            })
+        }),
+        addAddress: builder.mutation<IAddress, Omit<IAddress, '_id'>>({
+            query: (body) => ({
+                url: '/user/address',
+                method: 'POST',
+                body
+            })
+        }),
+        getAddress: builder.mutation<IAddress[], void>({
+            query: () => ({
+                url: '/user/address',
+                method: 'GET'
+            })
+        }),
+        removeAddress: builder.mutation<IAddress, string>({
+            query: (id: string) => ({
+                url: '/user/address/' + id,
+                method: 'DELETE'
             })
         })
     })
@@ -46,5 +65,8 @@ export const {
     useGetUserMutation,
     useLoginMutation,
     useRegisterMutation,
-    useUpdatePasswordMutation
+    useUpdatePasswordMutation,
+    useAddAddressMutation,
+    useRemoveAddressMutation,
+    useGetAddressMutation
 } = userApi;
