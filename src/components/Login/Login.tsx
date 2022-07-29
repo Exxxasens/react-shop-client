@@ -5,23 +5,14 @@ import InputLabel from '../ui/InputLabel';
 import Input from '../ui/Input';
 import SubmitButton from '../ui/SubmitButton';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-    AuthCard,
-    AuthText,
-    AuthTitle,
-    AuthMessage,
-    SubmitMessage
-} from '../ui/AuthCard';
+import { AuthCard, AuthText, AuthTitle, AuthMessage, SubmitMessage } from '../ui/AuthCard';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useLoginMutation } from '../../api/userApi';
 import * as zod from 'zod';
 
 const loginSchema = zod.object({
-    email: zod
-        .string()
-        .email('Некорректная почта')
-        .min(1, 'Поле обязательное для заполнения'),
+    email: zod.string().email('Некорректная почта').min(1, 'Поле обязательное для заполнения'),
     password: zod.string().min(1, 'Поле обязательное для заполнения')
 });
 
@@ -80,28 +71,14 @@ const Login = () => {
             >
                 <InputContainer>
                     <InputLabel>Почта:</InputLabel>
-                    <Input
-                        type="text"
-                        placeholder="Введите почту"
-                        {...register('email')}
-                    />
-                    {errors.email && (
-                        <AuthMessage type="error">
-                            {errors.email.message}
-                        </AuthMessage>
-                    )}
+                    <Input type="text" placeholder="Введите почту" {...register('email')} />
+                    {errors.email && <AuthMessage type="error">{errors.email.message}</AuthMessage>}
                 </InputContainer>
                 <InputContainer>
                     <InputLabel>Пароль:</InputLabel>
-                    <Input
-                        type="password"
-                        placeholder="Введите пароль"
-                        {...register('password')}
-                    />
+                    <Input type="password" placeholder="Введите пароль" {...register('password')} />
                     {errors.password && (
-                        <AuthMessage type="error">
-                            {errors.password.message}
-                        </AuthMessage>
+                        <AuthMessage type="error">{errors.password.message}</AuthMessage>
                     )}
                 </InputContainer>
                 {error && <SubmitMessage type="error">{error}</SubmitMessage>}

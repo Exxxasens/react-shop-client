@@ -1,3 +1,5 @@
+import React from 'react';
+
 declare module '*.png';
 declare module '*.svg' {
     const content: string;
@@ -22,6 +24,7 @@ declare global {
     }
     interface IUser {
         _id: string;
+        role: string;
         email: string;
         name: string;
         lastname: string;
@@ -34,9 +37,34 @@ declare global {
         building: string;
         postCode: string;
     }
+    interface IProperty {
+        _id: string;
+        name: string;
+        value: string;
+    }
+    interface IProduct {
+        _id: string;
+        name: string;
+        description: string;
+        shortDescription?: string;
+        buyPrice: number;
+        sellPrice: number;
+        vendorCode: string;
+        quantity: number;
+        show: boolean;
+        properties: IProperty[];
+        categories: string[];
+        variants: string[];
+    }
     interface IMessage {
         type: 'error' | 'info' | 'success';
         text: string;
+    }
+    interface IMenuItem {
+        title: string;
+        icon: React.ReactNode;
+        className?: string;
+        handler: () => void;
     }
     interface ErrorResponse {
         status: number;

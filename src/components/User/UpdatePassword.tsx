@@ -18,7 +18,6 @@ const UpdatePasswordCard = styled(Card)`
     display: flex;
     flex-direction: column;
     max-width: 400px;
-    gap: 1rem;
 `;
 
 interface Message {
@@ -72,10 +71,10 @@ const UpdatePassword = () => {
                 setMessage({ type: 'success', text: 'Пароль успешно изменен' });
             })
             .catch((error) => {
-                setMessage({
-                    type: 'error',
-                    text: error.message || 'Произошла неизвестная ошибка'
-                });
+                if (error.data && error.data.message) {
+                    return setMessage({ type: 'error', text: error.data.message });
+                }
+                setMessage({ type: 'error', text: 'Произошла неизвестная ошибка' });
             });
     }
 
@@ -83,10 +82,9 @@ const UpdatePassword = () => {
         <UpdatePasswordCard>
             <CardTitle>Изменить пароль</CardTitle>
             <CardText>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid
-                est harum praesentium ratione sunt consectetur inventore
-                blanditiis fugiat cumque! Tempora, nostrum. Praesentium dolore
-                debitis est soluta, mollitia tenetur odio saepe.
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid est harum
+                praesentium ratione sunt consectetur inventore blanditiis fugiat cumque! Tempora,
+                nostrum. Praesentium dolore debitis est soluta, mollitia tenetur odio saepe.
             </CardText>
             {showForm && (
                 <ColumnContainer
@@ -102,9 +100,7 @@ const UpdatePassword = () => {
                             {...register('password')}
                         />
                         {errors.password && (
-                            <AuthMessage type="error">
-                                {errors.password.message}
-                            </AuthMessage>
+                            <AuthMessage type="error">{errors.password.message}</AuthMessage>
                         )}
                     </InputContainer>
                     <InputContainer>
@@ -115,9 +111,7 @@ const UpdatePassword = () => {
                             {...register('newPassword')}
                         />
                         {errors.newPassword && (
-                            <AuthMessage type="error">
-                                {errors.newPassword.message}
-                            </AuthMessage>
+                            <AuthMessage type="error">{errors.newPassword.message}</AuthMessage>
                         )}
                     </InputContainer>
                     <InputContainer>
@@ -128,19 +122,15 @@ const UpdatePassword = () => {
                             {...register('repeatPassword')}
                         />
                         {errors.repeatPassword && (
-                            <AuthMessage type="error">
-                                {errors.repeatPassword.message}
-                            </AuthMessage>
+                            <AuthMessage type="error">{errors.repeatPassword.message}</AuthMessage>
                         )}
                     </InputContainer>
-                    {message && (
-                        <Message type={message.type}>{message.text}</Message>
-                    )}
+                    {message && <Message type={message.type}>{message.text}</Message>}
                     <SubmitButton disabled={isLoading}>Изменить</SubmitButton>
                 </ColumnContainer>
             )}
             {!showForm && (
-                <Button variant="active" onClick={onShowForm}>
+                <Button variant="active" onClick={onShowForm} style={{ marginTop: '1rem' }}>
                     Изменить пароль
                 </Button>
             )}

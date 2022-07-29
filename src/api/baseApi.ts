@@ -1,9 +1,5 @@
 import { BaseQueryApi } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
-import {
-    createApi,
-    FetchArgs,
-    fetchBaseQuery
-} from '@reduxjs/toolkit/query/react';
+import { createApi, FetchArgs, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootStore } from '../store';
 import { logout } from '../store/slices/authSlice';
 
@@ -27,13 +23,9 @@ const baseQueryWithErrorHandler = async (
     let result = await baseQuery(args, api, extraOptions);
     if (result.error && result.error.data) {
         const { message } = result.error.data as ErrorResponse;
-        if (
-            result.error.status === 401 &&
-            message === 'Срок действия токена истек'
-        ) {
+        if (result.error.status === 401 && message === 'Срок действия токена истек') {
             api.dispatch(logout());
         }
-        throw new Error(message);
     }
     return result;
 };

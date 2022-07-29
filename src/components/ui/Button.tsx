@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 interface ButtonProps {
-    variant?: 'active';
+    variant?: 'active' | 'dark' | 'outline';
 }
 
 const Button = styled.button<ButtonProps>`
@@ -41,6 +41,23 @@ const Button = styled.button<ButtonProps>`
         `
         color: var(--primary-light-color);
         background: var(--primary-color);
+        box-shadow: var(--primary-shadow);
+    `}
+
+    ${({ variant }) =>
+        variant === 'outline' &&
+        `
+        color: var(--primary-color);
+        border: 2px solid var(--primary-color);
+        background: transparent;
+    `}
+
+    ${({ variant }) =>
+        variant === 'dark' &&
+        `
+        color: var(--primary-light-color);
+        background: var(--text-color);
+        box-shadow: none;
     `}
 `;
 

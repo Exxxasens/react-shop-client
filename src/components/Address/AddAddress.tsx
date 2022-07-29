@@ -15,7 +15,8 @@ const AddAdress = () => {
         const { region_with_type, city, house, street, postal_code } = address.data;
 
         if (!region_with_type || !city || !house || !postal_code) {
-            return setMessage({ type: 'error', text: 'Выбран неполный адрес' });
+            setMessage({ type: 'error', text: 'Выбран неполный адрес' });
+            return setAddress(null);
         }
 
         setAddress(address);
@@ -25,7 +26,6 @@ const AddAdress = () => {
 
     function onSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-
         if (!address) {
             return setMessage({ type: 'error', text: 'Адрес не выбран' });
         }
@@ -39,9 +39,12 @@ const AddAdress = () => {
         })
             .unwrap()
             .then(() => setMessage({ type: 'success', text: 'Адрес успешно добавлен' }))
-            .catch((error) =>
-                setMessage({ type: 'error', text: error.message || 'Произошла неизвестная ошибка' })
-            );
+            .catch((error) => {
+                if (error.data && error.data.message) {
+                    return setMessage({ type: 'error', text: error.data.message });
+                }
+                setMessage({ type: 'error', text: 'Произошла неизвестная ошибка' });
+            });
     }
 
     function handleInputChange() {

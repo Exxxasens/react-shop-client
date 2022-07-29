@@ -16,7 +16,8 @@ const PageLayout = ({ title, children }: PageLaoutProps) => {
     return (
         <ColumnContainer style={{ margin: '1rem 2rem', width: '100%' }}>
             {title && <Header>{title}</Header>}
-            {children || <Outlet />}
+            {children}
+            <Outlet />
         </ColumnContainer>
     );
 };
