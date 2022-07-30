@@ -8,6 +8,7 @@ import useAuth from '../hooks/useAuth';
 import { Sidebar, SidebarLink, SidebarTag, SidebarTagLoading } from '../Sidebar';
 import RowContainer from '../ui/RowContainer';
 import ContextMenu from '../ContextMenu/ContextMenu';
+import EditProduct from '../../pages/EditProduct';
 
 const AppContainer = styled(RowContainer)`
     min-height: 100vh;
@@ -34,6 +35,7 @@ const AdminApp = () => {
                     icon={<FiList />}
                     style={{ marginTop: '2rem' }}
                 />
+                <SidebarLink to="categories" title="Категории" icon={<FiPackage />} />
                 <SidebarLink to="products" title="Товары" icon={<FiPackage />} />
                 <SidebarLink
                     to="/auth/logout"
@@ -46,8 +48,10 @@ const AdminApp = () => {
                 <Route path="products" element={<PageLayout title="Товары" />}>
                     <Route index element={<Products />} />
                     <Route path="create" element={<NewProduct />} />
+                    <Route path="edit/:id" element={<EditProduct />} />
                 </Route>
                 <Route path="orders" element={<PageLayout title="Заказы" />} />
+                <Route path="categories" element={<PageLayout title="Категории" />} />
             </Routes>
         </AppContainer>
     );

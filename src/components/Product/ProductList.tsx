@@ -1,6 +1,14 @@
-import { FiMoreVertical } from 'react-icons/fi';
+import { FiEdit, FiMoreVertical, FiTrash2 } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useGetProductsQuery } from '../../api/productsApi';
+import {
+    hideContextMenu,
+    setContextMenu,
+    setPosition,
+    showContextMenu
+} from '../../store/slices/contextMenuSlice';
+import useAppDispatch from '../hooks/useAppDispatch';
 import ColumnContainer from '../ui/ColumnContainer';
 import RowContainer from '../ui/RowContainer';
 
@@ -40,6 +48,36 @@ const NameCell = styled(Cell)`
 
 const ProductList = () => {
     const { data, isLoading } = useGetProductsQuery();
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+
+    const onContextMenuOpen = (e: React.MouseEvent<HTMLButtonElement>, product: IProduct) => {
+        const contextMenu: IMenuItem[] = [
+            {
+                title: 'Редактировать',
+                icon: <FiEdit />,
+                handler: () => {
+                    navigate('edit/' + product._id);
+                    dispatch(hideContextMenu());
+                }
+            },
+            {
+                title: 'Удалить',
+                icon: <FiTrash2 />,
+                className: 'delete',
+                handler: () => {
+                    dispatch(hideContextMenu());
+                }
+            }
+        ];
+
+        const x = e.pageX;
+        const y = e.pageY;
+
+        dispatch(setContextMenu(contextMenu));
+        dispatch(setPosition({ x, y }));
+        dispatch(showContextMenu());
+    };
 
     return (
         <Table style={{ width: '100%', fontSize: '0.85rem' }}>
@@ -67,7 +105,7 @@ const ProductList = () => {
                             </RowContainer>
                         </Cell>
                         <Cell>
-                            <CellBtn onClick={() => console.log('')}>
+                            <CellBtn onClick={(e) => onContextMenuOpen(e, product)}>
                                 <FiMoreVertical />
                             </CellBtn>
                         </Cell>

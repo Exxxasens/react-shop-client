@@ -13,6 +13,8 @@ import InputError from '../ui/InputError';
 import styled from 'styled-components';
 import * as zod from 'zod';
 import Button from '../ui/Button';
+import InputDescription from '../ui/InputDescription';
+import useProperties from '../hooks/useProperties';
 
 const propertySchema = zod.object({
     inputName: zod.string().min(1, 'Поле обязательное для заполнения'),
@@ -35,18 +37,32 @@ enum FormType {
     Find = 'FIND'
 }
 
+interface InjectedProps {
+    properties: IProperty[];
+}
+
+const withProperties = <T extends any>(Component: React.FC<T>): React.FC<T & InjectedProps> => {
+    return (props) => {
+        const { properties, isLoading } = useProperties();
+
+        if (isLoading) {
+            return <div>Loading...</div>;
+        }
+
+        return <Component {...props} properties={properties} />;
+    };
+};
+
 const PropertySelect: React.FC<CreateProductOptionProps> = ({ onSelect, properties }) => {
+    const [createProperty, { isLoading }] = useCreatePropertyMutation();
     const [nameFormType, setNameFormType] = React.useState<FormType>(
         properties[0] ? FormType.Find : FormType.Create
     );
     const [valueFormType, setValueFormType] = React.useState<FormType>(
         properties[0] ? FormType.Find : FormType.Create
     );
-
     const [currentName, setCurrentName] = React.useState<string>(properties[0]?.name);
     const [message, setMessage] = React.useState<IMessage>();
-    const [createProperty, { isLoading }] = useCreatePropertyMutation();
-
     const {
         register,
         formState: { errors },
@@ -63,7 +79,6 @@ const PropertySelect: React.FC<CreateProductOptionProps> = ({ onSelect, properti
     });
 
     function onSubmit(data: PropertySchema) {
-        console.log('submit');
         if (nameFormType === FormType.Create || valueFormType === FormType.Create) {
             let name = data.inputName,
                 value = data.inputValue;
@@ -142,38 +157,41 @@ const PropertySelect: React.FC<CreateProductOptionProps> = ({ onSelect, properti
         }
     }
 
+    if (!properties) {
+        return <div>loading...</div>;
+    }
+
     return (
         <ColumnContainer as="form" onSubmit={handleSubmit(onSubmit)} style={{ gap: '1rem' }}>
             <InputContainer>
                 <InputLabel>Название опции:</InputLabel>
-                <ColumnContainer>
-                    <RowContainer style={{ gap: '1rem' }}>
-                        <Input
-                            {...register('name', { onChange: onNameChange })}
-                            as="select"
-                            placeholder="Выберите из списка"
-                        >
-                            {properties.length > 0 && mapNames()}
-                            {properties.length === 0 && (
-                                <>
-                                    <option value="" disabled selected>
-                                        Нет доступных опций
-                                    </option>
-                                </>
-                            )}
-                            <option value={FormType.Create}>Добавить новую опцию</option>
-                        </Input>
-                        {nameFormType === FormType.Create && (
-                            <Input
-                                placeholder="Название"
-                                {...register('inputName')}
-                                style={{
-                                    borderTopLeftRadius: '1rem',
-                                    borderBottomLeftRadius: '1rem'
-                                }}
-                            />
+                <InputDescription>Выберите название из списка или добавьте новое</InputDescription>
+                <ColumnContainer style={{ gap: '1rem' }}>
+                    <Input
+                        {...register('name', { onChange: onNameChange })}
+                        as="select"
+                        placeholder="Выберите из списка"
+                    >
+                        {properties.length > 0 && mapNames()}
+                        {properties.length === 0 && (
+                            <>
+                                <option value="" disabled selected>
+                                    Нет доступных опций
+                                </option>
+                            </>
                         )}
-                    </RowContainer>
+                        <option value={FormType.Create}>Добавить новую опцию</option>
+                    </Input>
+                    {nameFormType === FormType.Create && (
+                        <Input
+                            placeholder="Название"
+                            {...register('inputName')}
+                            style={{
+                                borderTopLeftRadius: '1rem',
+                                borderBottomLeftRadius: '1rem'
+                            }}
+                        />
+                    )}
                     {nameFormType === FormType.Create && errors.inputName && (
                         <InputError type="error">{errors.inputName.message}</InputError>
                     )}
@@ -181,23 +199,22 @@ const PropertySelect: React.FC<CreateProductOptionProps> = ({ onSelect, properti
             </InputContainer>
             <InputContainer>
                 <InputLabel>Значение опции</InputLabel>
-                <ColumnContainer>
-                    <RowContainer style={{ gap: '1rem' }}>
-                        <Input as="select" {...register('value', { onChange: onValueChange })}>
-                            {mapValues()}
-                            <option value={FormType.Create}>Добавить новое значение</option>
-                        </Input>
-                        {valueFormType === FormType.Create && (
-                            <Input
-                                placeholder="Название"
-                                {...register('inputValue')}
-                                style={{
-                                    borderTopLeftRadius: '1rem',
-                                    borderBottomLeftRadius: '1rem'
-                                }}
-                            />
-                        )}
-                    </RowContainer>
+                <InputDescription>Выберите значение из списка или добавьте новое</InputDescription>
+                <ColumnContainer style={{ gap: '1rem' }}>
+                    <Input as="select" {...register('value', { onChange: onValueChange })}>
+                        {mapValues()}
+                        <option value={FormType.Create}>Добавить новое значение</option>
+                    </Input>
+                    {valueFormType === FormType.Create && (
+                        <Input
+                            placeholder="Название"
+                            {...register('inputValue')}
+                            style={{
+                                borderTopLeftRadius: '1rem',
+                                borderBottomLeftRadius: '1rem'
+                            }}
+                        />
+                    )}
                     {valueFormType === FormType.Create && errors.inputValue && (
                         <InputError type="error">{errors.inputValue.message}</InputError>
                     )}
@@ -206,11 +223,11 @@ const PropertySelect: React.FC<CreateProductOptionProps> = ({ onSelect, properti
 
             {message && <Message type={message.type}>{message.text}</Message>}
 
-            <SubmitButton disabled={isLoading} variant="dark" type="submit">
+            <Button disabled={isLoading} variant="dark" type="submit">
                 Добавить
-            </SubmitButton>
+            </Button>
         </ColumnContainer>
     );
 };
 
-export default PropertySelect;
+export default withProperties(PropertySelect);

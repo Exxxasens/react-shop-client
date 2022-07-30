@@ -32,5 +32,6 @@ const baseQueryWithErrorHandler = async (
 
 export const baseApi = createApi({
     baseQuery: baseQueryWithErrorHandler,
+    tagTypes: ['Product', 'User', 'Property'],
     endpoints: (builder) => ({})
 });

@@ -70,6 +70,11 @@ declare global {
         status: number;
         message: string;
     }
+    interface IUpdateProduct extends Omit<IProduct, 'properties' | 'variants' | 'categories'> {
+        properties: string[];
+        variants: string[];
+        categories: string[];
+    }
 }
 
 export {};

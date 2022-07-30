@@ -2,7 +2,7 @@ body {
     --text-color: #272830;
     --error-color: rgb(247, 98, 72);
     --success-color: rgb(0, 141, 63);
-    --primary-color: #696cff;
+    --primary-color: #446ffd;
     --primary-light-color: #ebf0fe;
     --background-color: #f1f2f3;
     --border-color: #eaeaea;
@@ -14,7 +14,7 @@ body {
     margin: 0;
 
     font-family: var(--font);
-    background: var(--background-color);
+    background: rgb(248, 249, 250);
     color: var(--text-color);
 }
 

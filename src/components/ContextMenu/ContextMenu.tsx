@@ -17,7 +17,12 @@ const ContextMenuWrapper = styled.div<ContextMenuWrapperProps>`
     background-color: white;
     border-radius: 0.5rem;
     box-shadow: 0px 0px 2rem 0px rgb(0 0 0 / 10%);
-
+    .delete {
+        &:hover {
+            background: var(--error-color);
+            color: white;
+        }
+    }
     ${(props) =>
         props.x &&
         props.y &&

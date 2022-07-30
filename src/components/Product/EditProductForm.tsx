@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import ColumnContainer from '../ui/ColumnContainer';
 import Input from '../ui/Input';
-import InputContainer from '../ui/InputContainer';
 import InputLabel from '../ui/InputLabel';
 import RowContainer from '../ui/RowContainer';
 import Table, { Cell, Row, TableHeader } from '../ui/Table';
@@ -11,12 +10,16 @@ import Button from '../ui/Button';
 import PropertySelect from './PropertySelect';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import useProperties from '../hooks/useProperties';
 import { useUpdateProductMutation } from '../../api/productsApi';
 import * as zod from 'zod';
-import { Card, CardTitle } from '../ui/Card';
+import { CardTitle } from '../ui/Card';
 import LinkButton from '../ui/LinkButton';
 import PropertiesList from './PropertiesList';
+import ImageUploader from '../Image/ImageUploader';
+import InputDescription from '../ui/InputDescription';
+import useAppDispatch from '../hooks/useAppDispatch';
+import { setContent, show, hide } from '../../store/slices/popupSlice';
+import CheckBox from '../ui/CheckBox';
 
 const productFormSchema = zod.object({
     name: zod.string(),
@@ -27,7 +30,6 @@ const productFormSchema = zod.object({
     sellPrice: zod.number(),
     vendorCode: zod.string(),
     quantity: zod.number(),
-    properties: zod.array(zod.string().length(24)),
     variants: zod.array(zod.string().length(24)),
     categories: zod.array(zod.string().length(24))
 });
@@ -72,24 +74,19 @@ const InputCard = styled(ColumnContainer)`
     }
 `;
 
-const InputDescription = styled(InputLabel)`
-    font-size: 0.85rem !important;
-    font-weight: 400 !important;
-    text-transform: unset !important;
-`;
-
 const resolver = zodResolver(productFormSchema);
 
-interface ProductFormProps {
+interface EditProductFormProps {
     product: IProduct;
 }
 
-const ProductForm: React.FC<ProductFormProps> = ({ product }) => {
-    const [displayOptionForm, setDisplayOptionForm] = React.useState(false);
+const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
+    const dispatch = useAppDispatch();
     const [updateProduct, { isLoading }] = useUpdateProductMutation();
-    const { properties } = useProperties();
     const {
         register,
+        setValue,
+        getValues,
         formState: { errors },
         handleSubmit
     } = useForm({
@@ -103,26 +100,47 @@ const ProductForm: React.FC<ProductFormProps> = ({ product }) => {
             vendorCode: product.vendorCode || '',
             quantity: product.quantity || 0,
             variants: product.variants || [],
-            properties: product.properties || [],
             categories: product.categories || []
         },
         resolver
     });
 
-    function showOptionForm() {
-        setDisplayOptionForm(true);
+    const [properties, setProperties] = React.useState<IProperty[]>(product.properties);
+
+    function addProperty(property: IProperty) {
+        setProperties((p) => {
+            return [...p.filter((item) => item._id !== property._id), property];
+        });
+        dispatch(hide());
     }
 
-    function closeOptionForm() {
-        setDisplayOptionForm(false);
+    function removeProperty({ _id }: IProperty) {
+        setProperties((p) => {
+            return p.filter((item) => item._id !== _id);
+        });
     }
 
-    function onSubmit(data: any) {
-        /*
-        updateProduct({
+    function showOptionPopup() {
+        dispatch(
+            setContent(
+                <>
+                    <CardTitle>Новое свойство</CardTitle>
+                    <PropertySelect onSelect={(property) => addProperty(property)} />
+                </>
+            )
+        );
+        dispatch(show());
+    }
+
+    function onSubmit(data: ProductFormSchema) {
+        const update: IUpdateProduct = {
             ...data,
+            properties: properties.map((item) => item._id),
+            variants: [],
+            categories: [],
             _id: product._id
-        })
+        };
+        updateProduct(update)
             .unwrap()
             .then((product) => {
                 console.log(product);
@@ -130,16 +148,36 @@ const ProductForm: React.FC<ProductFormProps> = ({ product }) => {
             .catch((error) => {
                 console.log(error);
             });
-            */
     }
 
+    console.log(errors);
+    console.log(getValues());
+
     return (
-        <ColumnContainer style={{ gap: '1.5rem' }} onSubmit={handleSubmit(onSubmit)}>
+        <ColumnContainer style={{ gap: '1.5rem' }} onSubmit={handleSubmit(onSubmit)} as="form">
             <CardTitle style={{ marginBottom: '-0.5rem' }}>Новый товар</CardTitle>
+            <RowContainer style={{ gap: '1rem' }}>
+                <InputCard style={{ flexGrow: 1 }}>
+                    <InputLabel>Наименование:</InputLabel>
+                    <InputDescription>Введите наименование товара</InputDescription>
+                    <Input placeholder="Введите наименование товара" {...register('name')} />
+                </InputCard>
+                <InputCard>
+                    <InputLabel>Отображение:</InputLabel>
+                    <InputDescription>Отображать товар на сайте?</InputDescription>
+                    <RowContainer>
+                        <input
+                            type="checkbox"
+                            style={{ height: '1.25rem', accentColor: 'var(--primary-color)' }}
+                            {...register('show')}
+                        />
+                    </RowContainer>
+                </InputCard>
+            </RowContainer>
             <InputCard>
-                <InputLabel>Наименование:</InputLabel>
-                <InputDescription>Введите наименование товара</InputDescription>
-                <Input placeholder="Введите наименование товара" {...register('name')} />
+                <InputLabel>Изображение:</InputLabel>
+                <InputDescription>Добавьте изображение</InputDescription>
+                <ImageUploader />
             </InputCard>
             <InputCard>
                 <InputLabel>Краткое описание:</InputLabel>
@@ -151,25 +189,15 @@ const ProductForm: React.FC<ProductFormProps> = ({ product }) => {
                 <InputDescription>Введите полное описание товара</InputDescription>
                 <TextArea placeholder="Введите описание товара" {...register('description')} />
             </InputCard>
-            {displayOptionForm && (
-                <InputCard>
-                    <ColumnContainer style={{ gap: '1rem' }}>
-                        <PropertySelect
-                            properties={properties}
-                            onSelect={(item) => console.log(item)}
-                        />
-                    </ColumnContainer>
-                </InputCard>
-            )}
             <InputCard>
                 <ColumnContainer>
                     <InputLabel style={{ marginLeft: 0 }}>Свойства:</InputLabel>
                     <InputDescription style={{ marginLeft: 0 }}>
                         Редактируйте свойства товара
                     </InputDescription>
-                    <PropertiesList product={product} />
+                    <PropertiesList properties={properties} onRemove={removeProperty} />
                     <RowContainer style={{ marginTop: '0.5rem' }}>
-                        <Button variant="dark" onClick={() => showOptionForm()}>
+                        <Button variant="dark" onClick={() => showOptionPopup()}>
                             Добавить свойство
                         </Button>
                     </RowContainer>
@@ -228,4 +256,4 @@ const ProductForm: React.FC<ProductFormProps> = ({ product }) => {
     );
 };
 
-export default ProductForm;
+export default EditProductForm;
