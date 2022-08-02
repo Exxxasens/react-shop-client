@@ -6,11 +6,8 @@ import InputContainer from '../ui/InputContainer';
 import InputLabel from '../ui/InputLabel';
 import Input from '../ui/Input';
 import { useCreatePropertyMutation } from '../../api/propertiesApi';
-import SubmitButton from '../ui/SubmitButton';
 import Message from '../ui/Message';
-import RowContainer from '../ui/RowContainer';
 import InputError from '../ui/InputError';
-import styled from 'styled-components';
 import * as zod from 'zod';
 import Button from '../ui/Button';
 import InputDescription from '../ui/InputDescription';
@@ -41,7 +38,7 @@ interface InjectedProps {
     properties: IProperty[];
 }
 
-const withProperties = <T extends any>(Component: React.FC<T>): React.FC<T & InjectedProps> => {
+const withProperties = <T extends InjectedProps>(Component: React.FC<T>): React.FC<T> => {
     return (props) => {
         const { properties, isLoading } = useProperties();
 
@@ -122,8 +119,7 @@ const PropertySelect: React.FC<CreateProductOptionProps> = ({ onSelect, properti
         return properties
             .filter((property) => property.name === currentName || nameFormType === FormType.Create)
             .map((property, i) => {
-                let isSelected = false;
-                if (i === 0) isSelected = true;
+                const isSelected = i === 0;
                 return (
                     <option value={property.value} key={property._id} selected={isSelected}>
                         {property.value}

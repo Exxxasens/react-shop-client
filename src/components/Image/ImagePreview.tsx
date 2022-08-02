@@ -48,18 +48,17 @@ interface ImagePreviewProps<T> {
     image: T;
     onRemove?: (image: T) => void;
 }
-const ImagePreview = <T extends File | string>({
-    image,
-    onRemove = () => null
-}: ImagePreviewProps<T>) => {
+const ImagePreview = <T extends File | string>({ image, onRemove }: ImagePreviewProps<T>) => {
     const imageSource = image instanceof File ? URL.createObjectURL(image) : image.toString();
     return (
         <PreviewImageWrapper>
             <ImageWithControlWrapper>
                 <PreviewImage src={imageSource} />
-                <DeleteImageBtn onClick={() => onRemove(image)}>
-                    <FiTrash2 />
-                </DeleteImageBtn>
+                {onRemove && (
+                    <DeleteImageBtn onClick={() => onRemove(image)}>
+                        <FiTrash2 />
+                    </DeleteImageBtn>
+                )}
             </ImageWithControlWrapper>
         </PreviewImageWrapper>
     );

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import { FiPlus } from 'react-icons/fi';
 import styled from 'styled-components';
 import ColumnContainer from '../ui/ColumnContainer';
@@ -35,11 +35,16 @@ const ImageInputLabel = styled.div`
     }
 `;
 
-interface ImageUploaderProps extends React.InputHTMLAttributes<HTMLInputElement> {}
+interface ImageUploaderProps extends React.InputHTMLAttributes<HTMLInputElement> {
+    onUpload: (file: File) => void;
+}
 
-const ImageUploader = ({ onChange, ...rest }: ImageUploaderProps) => {
-    const [images, setImages] = React.useState<File[]>([]);
-
+const ImageUploader = ({
+    onChange,
+    children,
+    onUpload,
+    ...rest
+}: PropsWithChildren<ImageUploaderProps>) => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         onChange && onChange(e);
 
@@ -51,17 +56,9 @@ const ImageUploader = ({ onChange, ...rest }: ImageUploaderProps) => {
             const image = files.item(index);
             if (image) {
                 imageArray.push(image);
+                onUpload(image);
             }
         }
-        setImages((prev) => {
-            return [...prev, ...imageArray];
-        });
-    };
-
-    const removeImage = (image: File) => {
-        setImages((images) => {
-            return images.filter((item) => item !== image);
-        });
     };
 
     return (
@@ -83,11 +80,7 @@ const ImageUploader = ({ onChange, ...rest }: ImageUploaderProps) => {
                         </RowContainer>
                     </ImageInputLabel>
                 </ImageInputWrapper>
-                <RowContainer style={{ gap: '1rem' }}>
-                    {images.map((image) => {
-                        return <ImagePreview image={image} onRemove={removeImage} />;
-                    })}
-                </RowContainer>
+                <RowContainer style={{ gap: '1rem' }}>{children}</RowContainer>
             </RowContainer>
         </ColumnContainer>
     );

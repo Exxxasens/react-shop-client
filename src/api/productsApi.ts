@@ -35,6 +35,25 @@ export const productApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: (result, error, arg) =>
                 result ? [{ type: 'Product', id: result._id }] : ['Product']
+        }),
+        addProductImage: builder.mutation<IUploadImageResponse, unknown>({
+            query: ({ id, image }: { id: string; image: File }) => {
+                const form = new FormData();
+                form.append('image', image);
+                return {
+                    url: `/product/${id}/image`,
+                    method: 'POST',
+                    body: form
+                };
+            }
+        }),
+        removeProductImage: builder.mutation({
+            query: ({ imageId, productId }: { imageId: string; productId: string }) => ({
+                url: `/product/${productId}/image/${imageId}`,
+                method: 'DELETE'
+            }),
+            invalidatesTags: (result, error, arg) =>
+                result ? [{ type: 'Product', id: arg.productId }] : ['Product']
         })
     })
 });
@@ -43,5 +62,7 @@ export const {
     useGetProductsQuery,
     useGetProductQuery,
     useUpdateProductMutation,
-    useCreateProductMutation
+    useCreateProductMutation,
+    useRemoveProductImageMutation,
+    useAddProductImageMutation
 } = productApi;

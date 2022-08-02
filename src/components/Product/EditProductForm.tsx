@@ -20,6 +20,7 @@ import InputDescription from '../ui/InputDescription';
 import useAppDispatch from '../hooks/useAppDispatch';
 import { setContent, show, hide } from '../../store/slices/popupSlice';
 import CheckBox from '../ui/CheckBox';
+import ProductImageUploader from './ProductImageUploader';
 
 const productFormSchema = zod.object({
     name: zod.string(),
@@ -121,15 +122,15 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
     }
 
     function showOptionPopup() {
-        dispatch(
-            setContent(
-                <>
-                    <CardTitle>Новое свойство</CardTitle>
-                    <PropertySelect onSelect={(property) => addProperty(property)} />
-                </>
-            )
-        );
-        dispatch(show());
+        // dispatch(
+        //     setContent(
+        //         <>
+        //             <CardTitle>Новое свойство</CardTitle>
+        //             <PropertySelect onSelect={(property) => addProperty(property)} />
+        //         </>
+        //     )
+        // );
+        // dispatch(show());
     }
 
     function onSubmit(data: ProductFormSchema) {
@@ -149,9 +150,6 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
                 console.log(error);
             });
     }
-
-    console.log(errors);
-    console.log(getValues());
 
     return (
         <ColumnContainer style={{ gap: '1.5rem' }} onSubmit={handleSubmit(onSubmit)} as="form">
@@ -177,7 +175,7 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
             <InputCard>
                 <InputLabel>Изображение:</InputLabel>
                 <InputDescription>Добавьте изображение</InputDescription>
-                <ImageUploader />
+                <ProductImageUploader product={product} />
             </InputCard>
             <InputCard>
                 <InputLabel>Краткое описание:</InputLabel>

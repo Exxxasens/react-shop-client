@@ -55,6 +55,7 @@ declare global {
         properties: IProperty[];
         categories: string[];
         variants: string[];
+        images: string[];
     }
     interface IMessage {
         type: 'error' | 'info' | 'success';
@@ -70,10 +71,23 @@ declare global {
         status: number;
         message: string;
     }
-    interface IUpdateProduct extends Omit<IProduct, 'properties' | 'variants' | 'categories'> {
+    interface IUpdateProduct
+        extends Omit<IProduct, 'properties' | 'variants' | 'categories' | 'images'> {
         properties: string[];
         variants: string[];
         categories: string[];
+    }
+    interface IUploadImageResponse {
+        fieldname: string;
+        originalname: string;
+        encoding: string;
+        mimetype: string;
+        id: string;
+        filename: string;
+        chinkSize: number;
+        size: number;
+        uploadDate: string;
+        contentType: string;
     }
 }
 
