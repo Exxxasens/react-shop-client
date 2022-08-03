@@ -1,5 +1,6 @@
 body {
     --text-color: #272830;
+    --secondary-text-color: #566a7f;
     --error-color: rgb(247, 98, 72);
     --success-color: rgb(0, 141, 63);
     --primary-color: #446ffd;

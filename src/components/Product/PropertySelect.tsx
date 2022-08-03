@@ -11,7 +11,8 @@ import InputError from '../ui/InputError';
 import * as zod from 'zod';
 import Button from '../ui/Button';
 import InputDescription from '../ui/InputDescription';
-import useProperties from '../hooks/useProperties';
+import withLoading from '../hoc/withLoading';
+import withProperties from '../hoc/withProperties';
 
 const propertySchema = zod.object({
     inputName: zod.string().min(1, 'Поле обязательное для заполнения'),
@@ -33,22 +34,6 @@ enum FormType {
     Create = 'CREATE',
     Find = 'FIND'
 }
-
-interface InjectedProps {
-    properties: IProperty[];
-}
-
-const withProperties = <T extends InjectedProps>(Component: React.FC<T>): React.FC<T> => {
-    return (props) => {
-        const { properties, isLoading } = useProperties();
-
-        if (isLoading) {
-            return <div>Loading...</div>;
-        }
-
-        return <Component {...props} properties={properties} />;
-    };
-};
 
 const PropertySelect: React.FC<CreateProductOptionProps> = ({ onSelect, properties }) => {
     const [createProperty, { isLoading }] = useCreatePropertyMutation();
@@ -226,4 +211,4 @@ const PropertySelect: React.FC<CreateProductOptionProps> = ({ onSelect, properti
     );
 };
 
-export default withProperties(PropertySelect);
+export default withProperties(withLoading(PropertySelect, () => <div>Loading...</div>));

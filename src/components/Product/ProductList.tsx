@@ -33,17 +33,35 @@ const CellBtn = styled.button`
     }
 `;
 
-const Tag = styled.div`
+interface TagProps {
+    color?: string;
+    background?: string;
+}
+
+const Tag = styled.div<TagProps>`
     background: var(--background-color);
-    color: var(--text-color);
+    color: var(--secondary-text-color);
     padding: 0.75rem 1rem;
     border-radius: 1rem;
     font-size: 0.85rem;
     font-weight: bold;
+
+    ${(props) => props.color && `color: ${props.color} !important;`}
+    ${(props) => props.background && `background: ${props.background} !important;`}
 `;
 
-const NameCell = styled(Cell)`
+const ProductImage = styled.img`
+    height: 64px;
+    width: 64px;
+    background: var(--border-color);
+    border-radius: 4px;
+    object-fit: cover;
+`;
+
+const ProductName = styled.div`
     font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--secondary-text-color);
 `;
 
 const ProductList = () => {
@@ -89,28 +107,51 @@ const ProductList = () => {
                 <Cell style={{ textAlign: 'center' }}>Действие</Cell>
             </TableHeader>
             {data &&
-                data.map((product: IProduct) => (
-                    <Row>
-                        <NameCell>
-                            <ColumnContainer>
-                                <img />
-                                <div>{product.name || '-'}</div>
-                            </ColumnContainer>
-                        </NameCell>
-                        <Cell>{product.sellPrice} руб.</Cell>
-                        <Cell></Cell>
-                        <Cell>
-                            <RowContainer style={{ justifyContent: 'center' }}>
-                                <Tag>Черновик</Tag>
-                            </RowContainer>
-                        </Cell>
-                        <Cell>
-                            <CellBtn onClick={(e) => onContextMenuOpen(e, product)}>
-                                <FiMoreVertical />
-                            </CellBtn>
-                        </Cell>
-                    </Row>
-                ))}
+                data.map((product: IProduct) => {
+                    console.log(product);
+                    return (
+                        <Row>
+                            <Cell>
+                                <ColumnContainer>
+                                    <RowContainer
+                                        style={{
+                                            gap: '0.5rem',
+                                            alignItems: 'center'
+                                        }}
+                                    >
+                                        {product.images[0] && (
+                                            <ProductImage
+                                                src={`/api/images/${product.images[0]}`}
+                                            />
+                                        )}
+                                        <ProductName>{product.name || '-'}</ProductName>
+                                    </RowContainer>
+                                </ColumnContainer>
+                            </Cell>
+                            <Cell>{product.sellPrice} руб.</Cell>
+                            <Cell></Cell>
+                            <Cell>
+                                <RowContainer style={{ justifyContent: 'center' }}>
+                                    {product.show ? (
+                                        <Tag
+                                            color="var(--primary-light-color)"
+                                            background="var(--primary-color)"
+                                        >
+                                            Показывается
+                                        </Tag>
+                                    ) : (
+                                        <Tag>Не отображается</Tag>
+                                    )}
+                                </RowContainer>
+                            </Cell>
+                            <Cell>
+                                <CellBtn onClick={(e) => onContextMenuOpen(e, product)}>
+                                    <FiMoreVertical />
+                                </CellBtn>
+                            </Cell>
+                        </Row>
+                    );
+                })}
         </Table>
     );
 };

@@ -1,11 +1,5 @@
 import React from 'react';
 
-declare module '*.png';
-declare module '*.svg' {
-    const content: string;
-    export default content;
-}
-
 declare global {
     interface LoginSchema {
         email: string;

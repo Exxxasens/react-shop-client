@@ -7,7 +7,6 @@ import RowContainer from '../ui/RowContainer';
 import Table, { Cell, Row, TableHeader } from '../ui/Table';
 import TextArea from '../ui/TextArea';
 import Button from '../ui/Button';
-import PropertySelect from './PropertySelect';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useUpdateProductMutation } from '../../api/productsApi';
@@ -15,12 +14,13 @@ import * as zod from 'zod';
 import { CardTitle } from '../ui/Card';
 import LinkButton from '../ui/LinkButton';
 import PropertiesList from './PropertiesList';
-import ImageUploader from '../Image/ImageUploader';
 import InputDescription from '../ui/InputDescription';
 import useAppDispatch from '../hooks/useAppDispatch';
 import { setContent, show, hide } from '../../store/slices/popupSlice';
-import CheckBox from '../ui/CheckBox';
 import ProductImageUploader from './ProductImageUploader';
+import { withProduct } from '../hoc/withProduct';
+import withLoading from '../hoc/withLoading';
+import PropertySelect from './PropertySelect';
 
 const productFormSchema = zod.object({
     name: zod.string(),
@@ -122,15 +122,15 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
     }
 
     function showOptionPopup() {
-        // dispatch(
-        //     setContent(
-        //         <>
-        //             <CardTitle>Новое свойство</CardTitle>
-        //             <PropertySelect onSelect={(property) => addProperty(property)} />
-        //         </>
-        //     )
-        // );
-        // dispatch(show());
+        dispatch(
+            setContent(
+                <>
+                    <CardTitle>Новое свойство</CardTitle>
+                    <PropertySelect onSelect={(property: IProperty) => addProperty(property)} />
+                </>
+            )
+        );
+        dispatch(show());
     }
 
     function onSubmit(data: ProductFormSchema) {
@@ -254,4 +254,4 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
     );
 };
 
-export default EditProductForm;
+export default withProduct(withLoading(EditProductForm, () => <div>Loading</div>));

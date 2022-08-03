@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 const CheckBoxInput = styled.input`
     height: 1.25rem;
+    width: 1.25rem;
     accent-color: var(--primary-color);
 `;
 

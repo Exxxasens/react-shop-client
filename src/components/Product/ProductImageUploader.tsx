@@ -1,6 +1,5 @@
 import React from 'react';
 import { useAddProductImageMutation, useRemoveProductImageMutation } from '../../api/productsApi';
-import { useAddAddressMutation } from '../../api/userApi';
 import ImagePreview from '../Image/ImagePreview';
 import ImageUploader from '../Image/ImageUploader';
 import ColumnContainer from '../ui/ColumnContainer';
@@ -38,6 +37,7 @@ const ProductImageUploader = (props: ProductImageUploaderProps) => {
             })
             .catch((error) => {
                 setMessage(error.message || 'Произошла ошибка');
+                setUploadingImages((imgs) => imgs.filter((img) => img !== file));
             });
     };
 

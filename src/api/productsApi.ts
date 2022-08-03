@@ -1,5 +1,10 @@
 import { baseApi } from './baseApi';
 
+interface AddProductImagePayload {
+    id: string;
+    image: File;
+}
+
 export const productApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         getProducts: builder.query<IProduct[], void>({
@@ -36,8 +41,8 @@ export const productApi = baseApi.injectEndpoints({
             invalidatesTags: (result, error, arg) =>
                 result ? [{ type: 'Product', id: result._id }] : ['Product']
         }),
-        addProductImage: builder.mutation<IUploadImageResponse, unknown>({
-            query: ({ id, image }: { id: string; image: File }) => {
+        addProductImage: builder.mutation<IUploadImageResponse, AddProductImagePayload>({
+            query: ({ id, image }) => {
                 const form = new FormData();
                 form.append('image', image);
                 return {
@@ -45,7 +50,9 @@ export const productApi = baseApi.injectEndpoints({
                     method: 'POST',
                     body: form
                 };
-            }
+            },
+            invalidatesTags: (result, error, arg) =>
+                result ? [{ type: 'Product', id: arg.id }] : ['Product']
         }),
         removeProductImage: builder.mutation({
             query: ({ imageId, productId }: { imageId: string; productId: string }) => ({
@@ -64,5 +71,6 @@ export const {
     useUpdateProductMutation,
     useCreateProductMutation,
     useRemoveProductImageMutation,
-    useAddProductImageMutation
+    useAddProductImageMutation,
+    useLazyGetProductQuery
 } = productApi;
