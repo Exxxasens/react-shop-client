@@ -41,7 +41,9 @@ const Button = styled.button<ButtonProps>`
         `
         color: var(--primary-light-color);
         background: var(--primary-color);
-        box-shadow: var(--primary-shadow);
+        &:hover, &:focus {
+            box-shadow: var(--primary-shadow);
+        }
     `}
 
     ${({ variant }) =>

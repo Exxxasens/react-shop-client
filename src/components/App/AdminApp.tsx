@@ -9,6 +9,7 @@ import { Sidebar, SidebarLink, SidebarTag, SidebarTagLoading } from '../Sidebar'
 import RowContainer from '../ui/RowContainer';
 import ContextMenu from '../ContextMenu/ContextMenu';
 import EditProduct from '../../pages/EditProduct';
+import Categories from '../../pages/Categories';
 
 const AppContainer = styled(RowContainer)`
     min-height: 100vh;
@@ -51,7 +52,9 @@ const AdminApp = () => {
                     <Route path="edit/:id" element={<EditProduct />} />
                 </Route>
                 <Route path="orders" element={<PageLayout title="Заказы" />} />
-                <Route path="categories" element={<PageLayout title="Категории" />} />
+                <Route path="categories" element={<PageLayout title="Категории" />}>
+                    <Route index element={<Categories />} />
+                </Route>
             </Routes>
         </AppContainer>
     );

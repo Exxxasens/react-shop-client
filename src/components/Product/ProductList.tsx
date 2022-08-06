@@ -1,7 +1,7 @@
 import { FiEdit, FiMoreVertical, FiTrash2 } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { useGetProductsQuery } from '../../api/productsApi';
+import { useGetProductsQuery, useRemoveProductMutation } from '../../api/productsApi';
 import {
     hideContextMenu,
     setContextMenu,
@@ -66,6 +66,7 @@ const ProductName = styled.div`
 
 const ProductList = () => {
     const { data, isLoading } = useGetProductsQuery();
+    const [removeProduct, { isLoading: isLoadingDelete }] = useRemoveProductMutation();
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
@@ -84,6 +85,7 @@ const ProductList = () => {
                 icon: <FiTrash2 />,
                 className: 'delete',
                 handler: () => {
+                    removeProduct(product._id);
                     dispatch(hideContextMenu());
                 }
             }

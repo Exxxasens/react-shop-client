@@ -13,7 +13,12 @@ export const productApi = baseApi.injectEndpoints({
                 method: 'GET'
             }),
             providesTags: (result, error, arg) =>
-                result ? [...result].map(({ _id }) => ({ type: 'Product', id: _id })) : ['Product']
+                result
+                    ? [
+                          ...result.map(({ _id }) => ({ type: 'Product' as const, id: _id })),
+                          { type: 'Product', id: 'LIST' }
+                      ]
+                    : ['Product']
         }),
         getProduct: builder.query<IProduct, string>({
             query: (id: string) => ({
@@ -29,8 +34,14 @@ export const productApi = baseApi.injectEndpoints({
                 method: 'POST',
                 body: product
             }),
-            invalidatesTags: (result) =>
-                result ? [{ type: 'Product', id: result._id }] : ['Product']
+            invalidatesTags: (result) => (result ? [{ type: 'Product', id: 'LIST' }] : ['Product'])
+        }),
+        removeProduct: builder.mutation<IProduct, string>({
+            query: (id) => ({
+                url: '/product/' + id,
+                method: 'DELETE'
+            }),
+            invalidatesTags: (result, error, arg) => (result ? [{ type: 'Product', id: arg }] : [])
         }),
         updateProduct: builder.mutation<IProduct, IUpdateProduct>({
             query: (product) => ({
@@ -72,5 +83,6 @@ export const {
     useCreateProductMutation,
     useRemoveProductImageMutation,
     useAddProductImageMutation,
-    useLazyGetProductQuery
+    useLazyGetProductQuery,
+    useRemoveProductMutation
 } = productApi;

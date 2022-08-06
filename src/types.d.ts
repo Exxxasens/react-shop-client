@@ -51,15 +51,24 @@ declare global {
         variants: string[];
         images: string[];
     }
+    interface ICategory {
+        _id: string;
+        parent?: string | null;
+        title: string;
+        link: string;
+    }
+    interface ICategoryTreeItem extends ICategory {
+        children: ICategoryTreeItem[];
+    }
     interface IMessage {
         type: 'error' | 'info' | 'success';
         text: string;
     }
     interface IMenuItem {
-        title: string;
-        icon: React.ReactNode;
+        title?: string;
+        icon?: React.ReactNode;
         className?: string;
-        handler: () => void;
+        handler?: () => void;
     }
     interface ErrorResponse {
         status: number;

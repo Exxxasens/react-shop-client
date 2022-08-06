@@ -47,11 +47,11 @@ const MenuItem = styled.button`
     justify-content: flex-start;
     align-items: center;
     font-size: 0.85rem;
-    padding: 0.5rem 0.55rem;
-    border-radius: 0.25rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
     &:hover {
-        background: rgb(93, 104, 255);
-        color: white;
+        background: var(--primary-color);
+        color: var(--primary-light-color);
     }
 `;
 
