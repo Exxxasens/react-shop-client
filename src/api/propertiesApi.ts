@@ -1,6 +1,6 @@
 import { baseApi } from './baseApi';
 
-export const optionsApi = baseApi.injectEndpoints({
+export const propertiesApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         getProperties: builder.mutation<IProperty[], void>({
             query: () => ({
@@ -25,4 +25,4 @@ export const optionsApi = baseApi.injectEndpoints({
 });
 
 export const { useGetPropertiesMutation, useCreatePropertyMutation, useRemovePropertyMutation } =
-    optionsApi;
+    propertiesApi;

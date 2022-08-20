@@ -5,7 +5,14 @@ import RowContainer from '../ui/RowContainer';
 import ColumnContainer from '../ui/ColumnContainer';
 import useAppSelector from '../hooks/useAppSelector';
 import useAppDispatch from '../hooks/useAppDispatch';
-import { setContextMenu, setPosition, showContextMenu } from '../../store/slices/contextMenuSlice';
+import {
+    hideContextMenu,
+    setContextMenu,
+    setPosition,
+    showContextMenu
+} from '../../store/slices/contextMenuSlice';
+import { useRemoveCategoryMutation, useUpdateCategoryMutation } from '../../api/categoriesApi';
+import { useSearchParams } from 'react-router-dom';
 
 interface ItemWrapperProps {
     margin?: string;
@@ -13,15 +20,16 @@ interface ItemWrapperProps {
 
 const ItemWrapper = styled.div<ItemWrapperProps>`
     margin-left: 2rem;
-    margin-top: 0.75rem;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     margin-left: 2rem;
+    gap: 0.75rem;
 `;
 
 interface ItemProps {
     active: boolean;
+    isDisabled?: boolean;
 }
 
 const Item = styled.div<ItemProps>`
@@ -38,12 +46,21 @@ const Item = styled.div<ItemProps>`
     box-shadow: var(--card-shadow);
     font-size: 0.85rem;
 
+    transition: all 0.125s;
+
     ${(props) =>
         props.active &&
         `
         background: var(--primary-color);
         box-shadow: var(--primary-shadow);
-        color: white;
+        color: var(--primary-light-color);
+    `}
+
+    ${(props) =>
+        props.isDisabled &&
+        `
+        background: var(--background-color);
+        color: var(--text-color);
     `}
 `;
 
@@ -57,7 +74,7 @@ const ControlWrapper = styled.div`
 const ItemControl = styled.button`
     all: unset;
     // background-color: white;
-    color: white;
+    color: var(--primary-light-color);
     cursor: pointer;
     border-radius: 50%;
     margin-left: 0.25rem;
@@ -71,7 +88,8 @@ const ItemControl = styled.button`
     }
 `;
 
-const Title = styled.h3`
+const TitleInput = styled.input`
+    all: unset;
     margin: 0;
     padding: 0;
     font-weight: 400;
@@ -86,38 +104,51 @@ interface TreeNodeProps {
 const TreeNode: React.FC<TreeNodeProps> = ({ item, editable = false }) => {
     const [isShowSub, setShowSub] = React.useState(true);
     const [isActive, setActive] = React.useState(false);
+    const [isEditable, setEditable] = React.useState(false);
+    const [titleValue, setTitleValue] = React.useState(item.title);
+
     const toggleShow = () => setShowSub((s) => !s);
-    // const inputRef = React.useRef() as React.MutableRefObject<HTMLInputElement>;
+    const inputRef = React.useRef() as React.MutableRefObject<HTMLInputElement>;
     const dispatch = useAppDispatch();
     const { show } = useAppSelector((state) => state.contextMenu);
+    const [updateCategory, { isLoading: isUpdating }] = useUpdateCategoryMutation();
+    const [removeCategories] = useRemoveCategoryMutation();
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const contextMenuItems = [
+        {
+            title: 'Создать подкатегорию',
+            icon: <IoAdd />,
+            handler: () => {
+                setSearchParams({ parent: item._id, create: 'true' }, { replace: false });
+                setShowSub(true);
+                dispatch(hideContextMenu());
+            }
+        },
+        {
+            title: 'Редактировать',
+            icon: <IoPencilSharp />,
+            handler: () => {
+                inputRef.current && inputRef.current.focus();
+                setEditable(true);
+                dispatch(hideContextMenu());
+            }
+        },
+        {},
+        {
+            title: 'Удалить',
+            className: 'delete',
+            icon: <IoTrashOutline />,
+            handler: () => {
+                removeCategories(item._id);
+                dispatch(hideContextMenu());
+            }
+        }
+    ];
 
     const onContextMenu = (e: React.MouseEvent<HTMLElement>) => {
         if (show) return null;
         const { pageX, pageY } = e;
-        const contextMenuItems = [
-            {
-                title: 'Создать подкатегорию',
-                icon: <IoAdd />,
-                handler: () => {
-                    // popupStore.setContent(<CategoriesForm parent={item._id} />);
-                    setShowSub(true);
-                }
-            },
-            {
-                title: 'Редактировать',
-                icon: <IoPencilSharp />,
-                handler: () => {
-                    // inputRef.current && inputRef.current.focus();
-                }
-            },
-            {},
-            {
-                title: 'Удалить',
-                className: 'delete',
-                icon: <IoTrashOutline />,
-                handler: () => {}
-            }
-        ];
         dispatch(setContextMenu(contextMenuItems));
         dispatch(setPosition({ x: pageX, y: pageY }));
         dispatch(showContextMenu());
@@ -130,11 +161,38 @@ const TreeNode: React.FC<TreeNodeProps> = ({ item, editable = false }) => {
         }
     }, [show]);
 
+    const onEdit = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        if (isEditable) {
+            setTitleValue(value);
+        }
+    };
+
+    const onBlur = () => {
+        if (isEditable) {
+            setEditable(false);
+            if (item.title === titleValue) {
+                return null;
+            }
+            const update: ICategory = {
+                _id: item._id,
+                parent: item.parent,
+                title: titleValue
+            };
+            updateCategory(update);
+        }
+    };
+
     return (
         <>
-            <Item active={isActive}>
+            <Item active={isActive} isDisabled={isUpdating}>
                 <RowContainer>
-                    <Title>{item.title}</Title>
+                    <TitleInput
+                        value={titleValue}
+                        onChange={onEdit}
+                        onBlur={onBlur}
+                        ref={inputRef}
+                    />
                 </RowContainer>
                 <ControlWrapper>
                     {editable && (
@@ -167,7 +225,7 @@ interface CategoryProps {
 const CategoriesTree: React.FC<CategoryProps> = ({ editable = false, categories }) => {
     return (
         <RowContainer>
-            <ColumnContainer style={{ width: '100%' }}>
+            <ColumnContainer style={{ width: '100%', gap: "0.75rem" }}>
                 {categories.map((item) => (
                     <TreeNode item={item} editable={editable} key={item._id} />
                 ))}

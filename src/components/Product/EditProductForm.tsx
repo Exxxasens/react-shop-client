@@ -7,7 +7,7 @@ import RowContainer from '../ui/RowContainer';
 import Table, { Cell, Row, TableHeader } from '../ui/Table';
 import TextArea from '../ui/TextArea';
 import Button from '../ui/Button';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useUpdateProductMutation } from '../../api/productsApi';
 import * as zod from 'zod';
@@ -15,12 +15,14 @@ import { CardTitle } from '../ui/Card';
 import LinkButton from '../ui/LinkButton';
 import PropertiesList from './PropertiesList';
 import InputDescription from '../ui/InputDescription';
-import useAppDispatch from '../hooks/useAppDispatch';
-import { setContent, show, hide } from '../../store/slices/popupSlice';
 import ProductImageUploader from './ProductImageUploader';
 import { withProduct } from '../hoc/withProduct';
 import withLoading from '../hoc/withLoading';
 import PropertySelect from './PropertySelect';
+import { useSearchParams } from 'react-router-dom';
+import Popup from '../Popup';
+import { SelectOption } from '../ChipSelect/ChipSelect';
+import CategoriesChipSelect from '../ChipSelect/CategoriesChipSelect';
 
 const productFormSchema = zod.object({
     name: zod.string(),
@@ -32,7 +34,10 @@ const productFormSchema = zod.object({
     vendorCode: zod.string(),
     quantity: zod.number(),
     variants: zod.array(zod.string().length(24)),
-    categories: zod.array(zod.string().length(24))
+    categories: zod.array(zod.object({
+        value: zod.string(),
+        title: zod.string()
+    }))
 });
 
 type ProductFormSchema = zod.infer<typeof productFormSchema>;
@@ -82,12 +87,11 @@ interface EditProductFormProps {
 }
 
 const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
-    const dispatch = useAppDispatch();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [updateProduct, { isLoading }] = useUpdateProductMutation();
     const {
         register,
-        setValue,
-        getValues,
+        control,
         formState: { errors },
         handleSubmit
     } = useForm({
@@ -101,9 +105,10 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
             vendorCode: product.vendorCode || '',
             quantity: product.quantity || 0,
             variants: product.variants || [],
-            categories: product.categories || []
+            categories: product.categories.map(category => ({ title: category.title, value: category._id } as SelectOption)) || []
         },
-        resolver
+        resolver,
+        mode: 'onSubmit'
     });
 
     const [properties, setProperties] = React.useState<IProperty[]>(product.properties);
@@ -112,7 +117,7 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
         setProperties((p) => {
             return [...p.filter((item) => item._id !== property._id), property];
         });
-        dispatch(hide());
+        closePropertyPopup();
     }
 
     function removeProperty({ _id }: IProperty) {
@@ -121,24 +126,13 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
         });
     }
 
-    function showOptionPopup() {
-        dispatch(
-            setContent(
-                <>
-                    <CardTitle>Новое свойство</CardTitle>
-                    <PropertySelect onSelect={(property: IProperty) => addProperty(property)} />
-                </>
-            )
-        );
-        dispatch(show());
-    }
-
     function onSubmit(data: ProductFormSchema) {
+        console.log(data);
         const update: IUpdateProduct = {
             ...data,
             properties: properties.map((item) => item._id),
+            categories: data.categories.map(item => item.value),
             variants: [],
-            categories: [],
             _id: product._id
         };
         updateProduct(update)
@@ -151,8 +145,22 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
             });
     }
 
+    function showPropertyPopup() {
+        setSearchParams({ add_property: 'true' });
+    }
+
+    function closePropertyPopup() {
+        setSearchParams({});
+    }
+
     return (
         <ColumnContainer style={{ gap: '1.5rem' }} onSubmit={handleSubmit(onSubmit)} as="form">
+            {searchParams.get('add_property') === 'true' && (
+                <Popup onClose={closePropertyPopup}>
+                    <CardTitle>Новое свойство</CardTitle>
+                    <PropertySelect onSelect={(property: IProperty) => addProperty(property)} />
+                </Popup>
+            )}
             <CardTitle style={{ marginBottom: '-0.5rem' }}>Новый товар</CardTitle>
             <RowContainer style={{ gap: '1rem' }}>
                 <InputCard style={{ flexGrow: 1 }}>
@@ -178,6 +186,14 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
                 <ProductImageUploader product={product} />
             </InputCard>
             <InputCard>
+                <InputLabel>Категории:</InputLabel>
+                <InputDescription>Выберите категории для товара</InputDescription>
+                <Controller name="categories" control={control} shouldUnregister={true} render={({ field }) => {
+                    console.log(field);
+                    return <CategoriesChipSelect onChange={field.onChange} value={field.value} placeholder="Выберите из списка"/>
+                }}/>
+            </InputCard>
+            <InputCard>
                 <InputLabel>Краткое описание:</InputLabel>
                 <InputDescription>Введите краткое описание товара</InputDescription>
                 <TextArea placeholder="Введите описание товара" {...register('shortDescription')} />
@@ -195,7 +211,7 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
                     </InputDescription>
                     <PropertiesList properties={properties} onRemove={removeProperty} />
                     <RowContainer style={{ marginTop: '0.5rem' }}>
-                        <Button variant="dark" onClick={() => showOptionPopup()}>
+                        <Button variant="dark" onClick={showPropertyPopup}>
                             Добавить свойство
                         </Button>
                     </RowContainer>

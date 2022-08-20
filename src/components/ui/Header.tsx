@@ -7,6 +7,7 @@ import IconButton from './IconButton';
 import { FiShoppingCart, FiUser, FiAlignJustify } from 'react-icons/fi';
 import { NavLink } from 'react-router-dom';
 import useAppSelector from '../hooks/useAppSelector';
+import Menu from '../Menu';
 
 interface HeaderContainerProps {
     alignContent?: string;
@@ -31,12 +32,20 @@ const HeaderContainer = styled(RowContainer)`
 `;
 
 const Header = () => {
+    const [displayMenu, setDisplayMenu] = React.useState(false);
     const token = useAppSelector((state) => state.auth.token);
+
+    function toggleMenu() {
+        setDisplayMenu(prev => !prev);
+    }
 
     return (
         <HeaderContainer>
             <HeaderContainter alignContent="left">
-                <IconButton icon={<FiAlignJustify />}>Каталог</IconButton>
+                <RowContainer style={{ position: "relative" }}>
+                    <IconButton icon={<FiAlignJustify />} onClick={toggleMenu}>Каталог</IconButton>
+                    { displayMenu && <Menu/> }
+                </RowContainer>
             </HeaderContainter>
             <HeaderContainter alignContent="center">
                 <RowContainer style={{ maxWidth: '360px', width: '100%' }}>

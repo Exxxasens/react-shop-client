@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import styled from 'styled-components';
 import { IoClose } from 'react-icons/io5';
 import useAppSelector from '../hooks/useAppSelector';
@@ -59,21 +59,20 @@ const Button = styled.button`
     }
 `;
 
-const Popup = () => {
-    const { show, content } = useAppSelector((state) => state.popup);
-    const dispatch = useAppDispatch();
+interface PopupProps {
+    onClose: () => void;
+}
 
-    if (!show) return null;
-
+const Popup = ({ children, onClose }: PropsWithChildren<PopupProps>) => {
     return (
         <Background>
             <PopupWrapper>
                 <ButtonWrapper>
-                    <Button onClick={() => dispatch(hide())}>
+                    <Button onClick={onClose}>
                         <IoClose />
                     </Button>
                 </ButtonWrapper>
-                <ContentWrapper>{content}</ContentWrapper>
+                <ContentWrapper>{children}</ContentWrapper>
             </PopupWrapper>
         </Background>
     );

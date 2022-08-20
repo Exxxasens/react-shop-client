@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { hideContextMenu } from '../../store/slices/contextMenuSlice';
 import useAppDispatch from '../hooks/useAppDispatch';
@@ -17,6 +17,7 @@ const ContextMenuWrapper = styled.div<ContextMenuWrapperProps>`
     background-color: white;
     border-radius: 0.5rem;
     box-shadow: 0px 0px 2rem 0px rgb(0 0 0 / 10%);
+    width: max-content;
     .delete {
         &:hover {
             background: var(--error-color);
@@ -68,6 +69,7 @@ const IconWrapper = styled.div`
     justify-content: center;
     margin-right: 0.5rem;
 `;
+
 const TitleWrapper = styled.div``;
 
 interface MenuElementProps {
@@ -95,25 +97,19 @@ const ContextMenu = () => {
     const dispatch = useAppDispatch();
     const menuRef = React.createRef<HTMLDivElement>();
 
-    function buildContextMenu() {
-        return content.map(({ title, icon, handler, className }, i) => {
-            return (
-                <MenuElement
-                    title={title}
-                    icon={icon}
-                    onClick={handler}
-                    className={className}
-                    key={i}
-                />
-            );
-        });
-    }
-
     function closeMenu() {
         dispatch(hideContextMenu());
     }
 
     React.useEffect(() => {
+        if (show && menuRef.current) {
+            const width = menuRef.current.clientWidth + position.x;
+            const height = menuRef.current.clientHeight + position.y;
+            const translateX = width > window.innerWidth ? '-100%' : 0;
+            const translateY = height > window.innerHeight ? '-100%' : 0;
+            menuRef.current.style.transform = `translate(${translateX}, ${translateY})`;
+        }
+
         function handleMouseDown(e: MouseEvent) {
             const { target } = e;
             const { current } = menuRef;
@@ -136,7 +132,16 @@ const ContextMenu = () => {
 
     return (
         <ContextMenuWrapper x={position.x} y={position.y} ref={menuRef}>
-            {show && buildContextMenu()}
+            {show &&
+                content.map(({ title, icon, handler, className }, i) => (
+                    <MenuElement
+                        title={title}
+                        icon={icon}
+                        onClick={handler}
+                        className={className}
+                        key={i}
+                    />
+                ))}
         </ContextMenuWrapper>
     );
 };

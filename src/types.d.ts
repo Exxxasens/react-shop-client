@@ -47,7 +47,7 @@ declare global {
         quantity: number;
         show: boolean;
         properties: IProperty[];
-        categories: string[];
+        categories: ICategory[];
         variants: string[];
         images: string[];
     }
@@ -55,7 +55,7 @@ declare global {
         _id: string;
         parent?: string | null;
         title: string;
-        link: string;
+        // link: string;
     }
     interface ICategoryTreeItem extends ICategory {
         children: ICategoryTreeItem[];
