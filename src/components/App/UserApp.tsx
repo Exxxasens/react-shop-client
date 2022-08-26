@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import AuthLayout from '../../layouts/AuthLayout';
 import PageLayout from '../../layouts/PageLayout';
 import UserSidebarLayout from '../../layouts/UserSidebarLayout';
+import AllProducts from '../../pages/AllProducts';
+import ProductsByCategory from '../../pages/ProductsByCategory';
 import RegisterSuccess from '../../pages/RegisterSuccess';
 import UserAccount from '../../pages/UserAccount';
 import UserAddress from '../../pages/UserAddress';
@@ -32,6 +34,10 @@ const UserApp = () => {
                     <Route index element={<UserAddress />} />
                     <Route path="address" element={<UserAddress />} />
                     <Route path="account" element={<UserAccount />} />
+                </Route>
+                <Route path="category/:id" element={<ProductsByCategory />} />
+                <Route path="products" >
+                    <Route path="all" element={<AllProducts />} />
                 </Route>
                 <Route path="register/success" element={<RegisterSuccess />} />
             </Routes>

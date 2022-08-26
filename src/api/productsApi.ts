@@ -15,9 +15,31 @@ export const productApi = baseApi.injectEndpoints({
             providesTags: (result, error, arg) =>
                 result
                     ? [
-                          ...result.map(({ _id }) => ({ type: 'Product' as const, id: _id })),
-                          { type: 'Product', id: 'LIST' }
-                      ]
+                        ...result.map(({ _id }) => ({ type: 'Product' as const, id: _id })),
+                        { type: 'Product', id: 'LIST' }
+                    ]
+                    : ['Product']
+        }),
+        getProductsByCategory: builder.query<IProduct[], { id: string, sort: string | undefined }>({
+            query: ({ id, sort }) => {
+                let url = '/product/category/' + id;
+                if (sort) {
+                    const searchParams = new URLSearchParams();
+                    const [field, order] = sort.split("_");
+                    searchParams.append("sortBy", field);
+                    searchParams.append("order", order);
+                    url += "?" + searchParams.toString();
+                }
+                return {
+                    url,
+                    method: "GET"
+                }
+            },
+            providesTags: (result, error, arg) =>
+                result
+                    ? [
+                        ...result.map(({ _id }) => ({ type: 'Product' as const, id: _id }))
+                    ]
                     : ['Product']
         }),
         getProduct: builder.query<IProduct, string>({
@@ -84,5 +106,6 @@ export const {
     useRemoveProductImageMutation,
     useAddProductImageMutation,
     useLazyGetProductQuery,
-    useRemoveProductMutation
+    useRemoveProductMutation,
+    useGetProductsByCategoryQuery
 } = productApi;

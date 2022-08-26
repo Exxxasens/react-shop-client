@@ -6,9 +6,10 @@ export const StyledLinkButton = styled(Button)`
     background: var(--text-color);
     color: var(--primary-light-color);
     height: 100%;
+    width: 100%;
 `;
 
-interface LinkButtonProps extends NavLinkProps {}
+interface LinkButtonProps extends NavLinkProps { }
 
 const LinkButton = ({ children, ...rest }: React.PropsWithChildren<LinkButtonProps>) => {
     return (

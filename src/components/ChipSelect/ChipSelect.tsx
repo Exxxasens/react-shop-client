@@ -3,44 +3,14 @@ import { Ref } from 'react-hook-form';
 import styled from 'styled-components';
 import CheckBox from '../ui/CheckBox';
 import ColumnContainer from '../ui/ColumnContainer';
+import OptionList from '../ui/OptionList';
+import Option from '../ui/Option';
 import RowContainer from '../ui/RowContainer';
 
 export interface SelectOption {
     title: string;
     value: string;
 }
-
-const OptionList = styled(ColumnContainer)`
-    align-items: center;
-    padding: 0.5rem;
-    background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: 0px 0px 2rem 0px rgb(0 0 0 / 10%);
-    width: 100%;
-    
-`;
-
-const Option = styled.button`
-    background: none;
-    color: inherit;
-    border: none;
-    padding: 0;
-    width: 100%;
-    font: inherit;
-    cursor: pointer;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    font-size: 0.85rem;
-    padding: 0.5rem 0.75rem;
-    border-radius: 0.5rem;
-    font-weight: 600;
-    &:hover {
-        background: rgba(68, 111, 253, 0.85);
-        color: var(--primary-light-color);
-    }
-`;
 
 const ChipList = styled(RowContainer)`
     padding: 0.5rem;

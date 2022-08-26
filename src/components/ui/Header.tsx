@@ -13,7 +13,7 @@ interface HeaderContainerProps {
     alignContent?: string;
 }
 
-const HeaderContainter = styled(RowContainer)<HeaderContainerProps>`
+const HeaderContainter = styled(RowContainer) <HeaderContainerProps>`
     flex: 1 1 0px;
     align-items: center;
 
@@ -34,17 +34,31 @@ const HeaderContainer = styled(RowContainer)`
 const Header = () => {
     const [displayMenu, setDisplayMenu] = React.useState(false);
     const token = useAppSelector((state) => state.auth.token);
+    const menuRef = React.useRef<HTMLDivElement>(null);
 
     function toggleMenu() {
         setDisplayMenu(prev => !prev);
     }
 
+    React.useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (!displayMenu) return null;
+            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+                setDisplayMenu(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [menuRef, displayMenu]);
+
     return (
         <HeaderContainer>
             <HeaderContainter alignContent="left">
-                <RowContainer style={{ position: "relative" }}>
+                <RowContainer style={{ position: "relative" }} ref={menuRef}>
                     <IconButton icon={<FiAlignJustify />} onClick={toggleMenu}>Каталог</IconButton>
-                    { displayMenu && <Menu/> }
+                    {displayMenu && <Menu />}
                 </RowContainer>
             </HeaderContainter>
             <HeaderContainter alignContent="center">

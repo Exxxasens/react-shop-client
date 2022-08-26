@@ -1,19 +1,19 @@
 import { Link } from 'react-router-dom';
-import ProductList from '../components/Product/ProductList';
+import ProductTableList from '../components/Product/ProductTableList';
+import Button from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import ColumnContainer from '../components/ui/ColumnContainer';
-import LinkButton from '../components/ui/LinkButton';
 import RowContainer from '../components/ui/RowContainer';
 
 const Products = () => {
     return (
         <ColumnContainer>
             <RowContainer style={{ marginBottom: '2rem' }}>
-                <LinkButton to="create">Добавить новый</LinkButton>
+                <Link to="create"><Button variant="active">Добавить новый</Button></Link>
             </RowContainer>
             <ColumnContainer>
                 <Card style={{ width: '100%' }}>
-                    <ProductList />
+                    <ProductTableList />
                 </Card>
             </ColumnContainer>
         </ColumnContainer>

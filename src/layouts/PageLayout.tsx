@@ -7,14 +7,14 @@ const Header = styled.h1`
     margin: 2rem 0;
 `;
 
-export interface PageLaoutProps {
+export interface PageLaoutProps extends React.ComponentProps<typeof ColumnContainer> {
     title?: string;
     children?: React.ReactNode | React.ReactNode[];
 }
 
-const PageLayout = ({ title, children }: PageLaoutProps) => {
+const PageLayout = ({ title, children, ...rest }: PageLaoutProps) => {
     return (
-        <ColumnContainer style={{ margin: '1rem 2rem', width: '100%' }}>
+        <ColumnContainer style={{ padding: '1rem 2rem', width: '100%' }} {...rest}>
             {title && <Header>{title}</Header>}
             {children}
             <Outlet />

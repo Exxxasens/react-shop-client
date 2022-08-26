@@ -14,21 +14,21 @@ interface MenuItemLinkProps {
     active?: boolean;
 }
 const MenuItemLink = styled(LinkButton) <MenuItemLinkProps>`
-    gap: 0.5rem;
+    width: 100% !important;
     cursor: pointer;
     width: max-content;
     ${StyledLinkButton} {
         color: var(--text-color);
         background: none;
         &:hover, &:focus {
-            box-shadow: var(--primary-shadow);
+            background: var(--background-color);
+            box-shadow: none;
         }
     }
     ${props => props.active && `
         ${StyledLinkButton} {
-            color: var(--primary-light-color);
-            background: var(--primary-color);
-            box-shadow: var(--primary-shadow);
+            background: var(--background-color);
+            box-shadow: none;
         }
     `}
 `;
@@ -36,10 +36,9 @@ const MenuItemLink = styled(LinkButton) <MenuItemLinkProps>`
 const MenuLinkSecondary = styled.button`
     all: unset;
     padding: 0.5rem 1rem;
-    border-radius: 0.75rem;
-
+    border-radius: 0.5rem;
     font-size: 0.85rem;
-    font-weight: bold;
+    font-weight: 500;
 
     &:active,
     &:hover {
@@ -60,9 +59,9 @@ const Menu = () => {
     const { data, isLoading } = useGetCategoriesQuery();
     const [primaryCategory, setPrimaryCategory] = React.useState<ICategory | null>(null);
 
-    return <Card style={{ position: "absolute", top: "100%", marginTop: "1rem", padding: "0.75rem" }}>
+    return <Card style={{ position: "absolute", top: "100%", marginTop: "1rem", padding: "0.75rem", boxShadow: "var(--input-shadow)", zIndex: 9999 }}>
         <RowContainer>
-            <ColumnContainer style={{ gap: "0.5rem" }}>
+            <ColumnContainer style={{ gap: "0.5rem", minWidth: "10rem" }}>
                 {isLoading &&
                     (new Array(5).fill(null)).map(() => <ContentLoader
                         width={150}
@@ -74,22 +73,28 @@ const Menu = () => {
                     </ContentLoader>)
                 }
                 {data && data.filter(item => !item.parent).map(item => <MenuItemLink to={`/category/${item._id}`} onMouseEnter={() => setPrimaryCategory(item)} active={primaryCategory?._id === item._id} >
-                    <RowContainer style={{ gap: '0.5rem' }} >
-                        <RowContainer>{item.title}</RowContainer>
-                        <RowContainer>-{">"}</RowContainer>
+                    <RowContainer >
+                        {item.title}
                     </RowContainer>
                 </MenuItemLink>)}
+
+                <MenuItemLink to={`/products/all`} onMouseEnter={() => setPrimaryCategory(null)}>
+                    <RowContainer>
+                        Все товары
+                    </RowContainer>
+                </MenuItemLink>
+
             </ColumnContainer>
             {primaryCategory && data && <>
                 <Delimiter />
-                <ColumnContainer>
+                <ColumnContainer style={{ minWidth: '10rem' }}>
                     {data.filter(item => item.parent == primaryCategory._id).map(item => <Link to={`/category/${item._id}`}>
                         <ColumnContainer><MenuLinkSecondary>{item.title}</MenuLinkSecondary></ColumnContainer>
                     </Link>)}
                 </ColumnContainer>
             </>}
         </RowContainer>
-    </Card>
+    </Card >
 }
 
 export default Menu;

@@ -154,119 +154,122 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
     }
 
     return (
-        <ColumnContainer style={{ gap: '1.5rem' }} onSubmit={handleSubmit(onSubmit)} as="form">
+        <>
             {searchParams.get('add_property') === 'true' && (
                 <Popup onClose={closePropertyPopup}>
                     <CardTitle>Новое свойство</CardTitle>
                     <PropertySelect onSelect={(property: IProperty) => addProperty(property)} />
                 </Popup>
             )}
-            <CardTitle style={{ marginBottom: '-0.5rem' }}>Новый товар</CardTitle>
-            <RowContainer style={{ gap: '1rem' }}>
-                <InputCard style={{ flexGrow: 1 }}>
-                    <InputLabel>Наименование:</InputLabel>
-                    <InputDescription>Введите наименование товара</InputDescription>
-                    <Input placeholder="Введите наименование товара" {...register('name')} />
+            <ColumnContainer style={{ gap: '1.5rem' }} onSubmit={handleSubmit(onSubmit)} as="form">
+                <CardTitle style={{ marginBottom: '-0.5rem' }}>Новый товар</CardTitle>
+                <RowContainer style={{ gap: '1rem' }}>
+                    <InputCard style={{ flexGrow: 1 }}>
+                        <InputLabel>Наименование:</InputLabel>
+                        <InputDescription>Введите наименование товара</InputDescription>
+                        <Input placeholder="Введите наименование товара" {...register('name')} />
+                    </InputCard>
+                    <InputCard>
+                        <InputLabel>Отображение:</InputLabel>
+                        <InputDescription>Отображать товар на сайте?</InputDescription>
+                        <RowContainer>
+                            <input
+                                type="checkbox"
+                                style={{ height: '1.25rem', accentColor: 'var(--primary-color)' }}
+                                {...register('show')}
+                            />
+                        </RowContainer>
+                    </InputCard>
+                </RowContainer>
+                <InputCard>
+                    <InputLabel>Изображение:</InputLabel>
+                    <InputDescription>Добавьте изображение</InputDescription>
+                    <ProductImageUploader product={product} />
                 </InputCard>
                 <InputCard>
-                    <InputLabel>Отображение:</InputLabel>
-                    <InputDescription>Отображать товар на сайте?</InputDescription>
-                    <RowContainer>
-                        <input
-                            type="checkbox"
-                            style={{ height: '1.25rem', accentColor: 'var(--primary-color)' }}
-                            {...register('show')}
-                        />
-                    </RowContainer>
+                    <InputLabel>Категории:</InputLabel>
+                    <InputDescription>Выберите категории для товара</InputDescription>
+                    <Controller name="categories" control={control} shouldUnregister={true} render={({ field }) => {
+                        console.log(field);
+                        return <CategoriesChipSelect onChange={field.onChange} value={field.value} placeholder="Выберите из списка" />
+                    }} />
                 </InputCard>
-            </RowContainer>
-            <InputCard>
-                <InputLabel>Изображение:</InputLabel>
-                <InputDescription>Добавьте изображение</InputDescription>
-                <ProductImageUploader product={product} />
-            </InputCard>
-            <InputCard>
-                <InputLabel>Категории:</InputLabel>
-                <InputDescription>Выберите категории для товара</InputDescription>
-                <Controller name="categories" control={control} shouldUnregister={true} render={({ field }) => {
-                    console.log(field);
-                    return <CategoriesChipSelect onChange={field.onChange} value={field.value} placeholder="Выберите из списка"/>
-                }}/>
-            </InputCard>
-            <InputCard>
-                <InputLabel>Краткое описание:</InputLabel>
-                <InputDescription>Введите краткое описание товара</InputDescription>
-                <TextArea placeholder="Введите описание товара" {...register('shortDescription')} />
-            </InputCard>
-            <InputCard>
-                <InputLabel>Полное описание:</InputLabel>
-                <InputDescription>Введите полное описание товара</InputDescription>
-                <TextArea placeholder="Введите описание товара" {...register('description')} />
-            </InputCard>
-            <InputCard>
-                <ColumnContainer>
-                    <InputLabel style={{ marginLeft: 0 }}>Свойства:</InputLabel>
-                    <InputDescription style={{ marginLeft: 0 }}>
-                        Редактируйте свойства товара
-                    </InputDescription>
-                    <PropertiesList properties={properties} onRemove={removeProperty} />
-                    <RowContainer style={{ marginTop: '0.5rem' }}>
-                        <Button variant="dark" onClick={showPropertyPopup}>
-                            Добавить свойство
-                        </Button>
-                    </RowContainer>
-                </ColumnContainer>
-            </InputCard>
-            <InputCard style={{ padding: '1rem' }}>
-                <Table>
-                    <TableHeader>
-                        <Cell style={{ textAlign: 'center' }}>Артикул</Cell>
-                        <Cell style={{ textAlign: 'center' }}>Цена продажи</Cell>
-                        <Cell style={{ textAlign: 'center' }}>Цена закупки</Cell>
-                        <Cell style={{ textAlign: 'center' }}>Остаток</Cell>
-                    </TableHeader>
-                    <Row>
-                        <Cell>
-                            <CellInput placeholder="-" {...register('vendorCode')} />
-                        </Cell>
-                        <Cell>
-                            <CellInput
-                                placeholder="-"
-                                {...register('sellPrice', { valueAsNumber: true })}
-                            />
-                        </Cell>
-                        <Cell>
-                            <CellInput
-                                placeholder="-"
-                                {...register('buyPrice', {
-                                    valueAsNumber: true
-                                })}
-                            />
-                        </Cell>
-                        <Cell>
-                            <CellInput
-                                placeholder="-"
-                                {...register('quantity', { valueAsNumber: true })}
-                            />
-                        </Cell>
-                    </Row>
-                    {Object.keys(errors).length > 0 && (
-                        <Row style={{ borderBottom: 0 }}>
-                            <ErrorCell>{errors.vendorCode?.message}</ErrorCell>
-                            <ErrorCell>{errors.sellPrice?.message}</ErrorCell>
-                            <ErrorCell>{errors.buyPrice?.message}</ErrorCell>
-                            <ErrorCell>{errors.quantity?.message}</ErrorCell>
+                <InputCard>
+                    <InputLabel>Краткое описание:</InputLabel>
+                    <InputDescription>Введите краткое описание товара</InputDescription>
+                    <TextArea placeholder="Введите описание товара" {...register('shortDescription')} />
+                </InputCard>
+                <InputCard>
+                    <InputLabel>Полное описание:</InputLabel>
+                    <InputDescription>Введите полное описание товара</InputDescription>
+                    <TextArea placeholder="Введите описание товара" {...register('description')} />
+                </InputCard>
+                <InputCard>
+                    <ColumnContainer>
+                        <InputLabel style={{ marginLeft: 0 }}>Свойства:</InputLabel>
+                        <InputDescription style={{ marginLeft: 0 }}>
+                            Редактируйте свойства товара
+                        </InputDescription>
+                        <PropertiesList properties={properties} onRemove={removeProperty} />
+                        <RowContainer style={{ marginTop: '0.5rem' }}>
+                            <Button variant="dark" onClick={showPropertyPopup}>
+                                Добавить свойство
+                            </Button>
+                        </RowContainer>
+                    </ColumnContainer>
+                </InputCard>
+                <InputCard style={{ padding: '1rem' }}>
+                    <Table>
+                        <TableHeader>
+                            <Cell style={{ textAlign: 'center' }}>Артикул</Cell>
+                            <Cell style={{ textAlign: 'center' }}>Цена продажи</Cell>
+                            <Cell style={{ textAlign: 'center' }}>Цена закупки</Cell>
+                            <Cell style={{ textAlign: 'center' }}>Остаток</Cell>
+                        </TableHeader>
+                        <Row>
+                            <Cell>
+                                <CellInput placeholder="-" {...register('vendorCode')} />
+                            </Cell>
+                            <Cell>
+                                <CellInput
+                                    placeholder="-"
+                                    {...register('sellPrice', { valueAsNumber: true })}
+                                />
+                            </Cell>
+                            <Cell>
+                                <CellInput
+                                    placeholder="-"
+                                    {...register('buyPrice', {
+                                        valueAsNumber: true
+                                    })}
+                                />
+                            </Cell>
+                            <Cell>
+                                <CellInput
+                                    placeholder="-"
+                                    {...register('quantity', { valueAsNumber: true })}
+                                />
+                            </Cell>
                         </Row>
-                    )}
-                </Table>
-            </InputCard>
-            <RowContainer style={{ gap: '1rem' }}>
-                <LinkButton to="../">{'<-'} Назад</LinkButton>
-                <Button type="submit" variant="dark" disabled={isLoading}>
-                    Сохранить
-                </Button>
-            </RowContainer>
-        </ColumnContainer>
+                        {Object.keys(errors).length > 0 && (
+                            <Row style={{ borderBottom: 0 }}>
+                                <ErrorCell>{errors.vendorCode?.message}</ErrorCell>
+                                <ErrorCell>{errors.sellPrice?.message}</ErrorCell>
+                                <ErrorCell>{errors.buyPrice?.message}</ErrorCell>
+                                <ErrorCell>{errors.quantity?.message}</ErrorCell>
+                            </Row>
+                        )}
+                    </Table>
+                </InputCard>
+                <RowContainer style={{ gap: '1rem' }}>
+                    <LinkButton to="../">{'<-'} Назад</LinkButton>
+                    <Button type="submit" variant="dark" disabled={isLoading}>
+                        Сохранить
+                    </Button>
+                </RowContainer>
+            </ColumnContainer>
+        </>
+
     );
 };
 
