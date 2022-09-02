@@ -88,8 +88,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
     return (
         <ProductContainer onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
             <ColumnContainer>
-                <Image src={imageURL} style={{ display: isHover && secondaryImage ? "none" : "initial" }} loading="lazy" />
-                <Image src={secondaryImage} alt={product.name} style={{ display: isHover ? "initial" : "none" }} loading="lazy" />
+                <Image src={imageURL} style={{ display: isHover && images[1] ? "none" : "initial" }} loading="lazy" />
+                {images[1] && <Image src={secondaryImage} alt={product.name} style={{ display: isHover ? "initial" : "none" }} loading="lazy" />}
             </ColumnContainer>
             <ProductCaption>
                 <Name>{name}</Name>
@@ -98,7 +98,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 <Price>{formattedPrice}</Price>
             </ProductCaption>
             <ColumnContainer style={{ marginTop: 'auto' }}>
-                <Link to={'/product/' + product._id} style={{ marginTop: '0.5rem' }}>
+                <Link to={'/products/' + product._id} style={{ marginTop: '0.5rem' }}>
                     <Button style={{ width: '100%' }}>Подробнее</Button>
                 </Link>
             </ColumnContainer>

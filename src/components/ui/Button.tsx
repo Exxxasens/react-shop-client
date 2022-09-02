@@ -24,16 +24,10 @@ const Button = styled.button<ButtonProps>`
     transition: all 0.2s;
 
     &:active,
-    &:hover {
-        color: var(--primary-light-color);
-        background: var(--primary-color);
-        box-shadow: var(--primary-shadow);
-    }
-
-    &:disabled:hover {
-        background: var(--background-color);
-        color: var(--text-color);
-        box-shadow: none;
+    &:not(:disabled):hover {
+        color: var(--primary-light-color) !important;
+        background: var(--primary-color) !important;
+        box-shadow: var(--primary-shadow) !important;
     }
 
     ${({ variant }) =>

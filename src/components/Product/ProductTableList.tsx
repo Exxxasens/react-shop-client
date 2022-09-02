@@ -41,10 +41,11 @@ interface TagProps {
 const Tag = styled.div<TagProps>`
     background: var(--background-color);
     color: var(--secondary-text-color);
-    padding: 0.75rem 1rem;
     border-radius: 1rem;
-    font-size: 0.85rem;
     font-weight: bold;
+
+    font-size: 0.75rem; 
+    padding: 0.5rem 0.75rem;    
 
     ${(props) => props.color && `color: ${props.color} !important;`}
     ${(props) => props.background && `background: ${props.background} !important;`}
@@ -138,18 +139,24 @@ const ProductTableList = () => {
                                 </ColumnContainer>
                             </Cell>
                             <Cell style={{ fontWeight: 800 }}>{formatPrice(product.sellPrice)}</Cell>
-                            <Cell></Cell>
+                            <Cell>
+                                <RowContainer style={{ gap: "0.25rem", flexWrap: "wrap" }}>
+                                    {product.categories.slice(0, 3).map(item => <Tag>{item.title}</Tag>)}
+                                    {product.categories.length > 3 && <Tag>...</Tag>}
+                                </RowContainer>
+                            </Cell>
                             <Cell>
                                 <RowContainer style={{ justifyContent: 'center' }}>
                                     {product.show ? (
                                         <Tag
                                             color="var(--primary-light-color)"
                                             background="var(--primary-color)"
+                                            style={{ fontSize: '0.8rem', padding: '0.5rem 0.75rem' }}
                                         >
                                             Показывается
                                         </Tag>
                                     ) : (
-                                        <Tag>Не отображается</Tag>
+                                        <Tag style={{ fontSize: '0.8rem', padding: '0.5rem 0.75rem' }}>Не отображается</Tag>
                                     )}
                                 </RowContainer>
                             </Cell>

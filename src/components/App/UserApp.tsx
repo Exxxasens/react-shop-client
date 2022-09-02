@@ -4,6 +4,7 @@ import AuthLayout from '../../layouts/AuthLayout';
 import PageLayout from '../../layouts/PageLayout';
 import UserSidebarLayout from '../../layouts/UserSidebarLayout';
 import AllProducts from '../../pages/AllProducts';
+import Product from '../../pages/Product';
 import ProductsByCategory from '../../pages/ProductsByCategory';
 import RegisterSuccess from '../../pages/RegisterSuccess';
 import UserAccount from '../../pages/UserAccount';
@@ -38,6 +39,7 @@ const UserApp = () => {
                 <Route path="category/:id" element={<ProductsByCategory />} />
                 <Route path="products" >
                     <Route path="all" element={<AllProducts />} />
+                    <Route path=':id' element={<Product />} />
                 </Route>
                 <Route path="register/success" element={<RegisterSuccess />} />
             </Routes>

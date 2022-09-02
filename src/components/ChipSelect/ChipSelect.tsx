@@ -22,6 +22,7 @@ const ChipList = styled(RowContainer)`
     background: var(--background-color);
     width: 100%;
     cursor: pointer;
+    flex-wrap: wrap;
 `
 
 const Chip = styled.div`
