@@ -11,7 +11,7 @@ import {
 import useAppDispatch from '../hooks/useAppDispatch';
 import ColumnContainer from '../ui/ColumnContainer';
 import RowContainer from '../ui/RowContainer';
-
+import IMAGE_PLACEHOLDER from '../../static/image_placeholder.png';
 import Table, { TableHeader, Row, Cell } from '../ui/Table';
 
 const CellBtn = styled.button`
@@ -129,11 +129,9 @@ const ProductTableList = () => {
                                             alignItems: 'center'
                                         }}
                                     >
-                                        {product.images[0] && (
-                                            <ProductImage
-                                                src={`/api/images/${product.images[0]}`}
-                                            />
-                                        )}
+                                        <ProductImage
+                                            src={product.images[0] ? `/api/images/${product.images[0]}` : IMAGE_PLACEHOLDER}
+                                        />
                                         <ProductName>{product.name || '-'}</ProductName>
                                     </RowContainer>
                                 </ColumnContainer>
@@ -141,6 +139,7 @@ const ProductTableList = () => {
                             <Cell style={{ fontWeight: 800 }}>{formatPrice(product.sellPrice)}</Cell>
                             <Cell>
                                 <RowContainer style={{ gap: "0.25rem", flexWrap: "wrap" }}>
+                                    {product.categories.length === 0 && <Tag background='none'>Товар не добавлен ни в одну категорию</Tag>}
                                     {product.categories.slice(0, 3).map(item => <Tag>{item.title}</Tag>)}
                                     {product.categories.length > 3 && <Tag>...</Tag>}
                                 </RowContainer>

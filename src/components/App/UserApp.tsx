@@ -4,6 +4,7 @@ import AuthLayout from '../../layouts/AuthLayout';
 import PageLayout from '../../layouts/PageLayout';
 import UserSidebarLayout from '../../layouts/UserSidebarLayout';
 import AllProducts from '../../pages/AllProducts';
+import Cart from '../../pages/Cart';
 import Product from '../../pages/Product';
 import ProductsByCategory from '../../pages/ProductsByCategory';
 import RegisterSuccess from '../../pages/RegisterSuccess';
@@ -24,7 +25,7 @@ const UserApp = () => {
         <AppContainer>
             <Header></Header>
             <Routes>
-                <Route path="cart" element={<PageLayout title="Корзина" />} />
+                <Route path="cart" element={<Cart />} />
                 <Route path="auth" element={<AuthLayout />}>
                     <Route index element={<Navigate to="login" />} />
                     <Route path="login" element={<Login />} />

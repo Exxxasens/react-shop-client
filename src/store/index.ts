@@ -4,6 +4,7 @@ import authSlice from './slices/authSlice';
 import addressSlice from './slices/addressSlice';
 import propertiesSlice from './slices/propertiesSlice';
 import contextMenuSlice from './slices/contextMenuSlice';
+import cartSlice from './slices/cartSlice';
 
 export const store = configureStore({
     reducer: {
@@ -11,7 +12,8 @@ export const store = configureStore({
         [addressSlice.name]: addressSlice.reducer,
         [baseApi.reducerPath]: baseApi.reducer,
         [contextMenuSlice.name]: contextMenuSlice.reducer,
-        [propertiesSlice.name]: propertiesSlice.reducer
+        [propertiesSlice.name]: propertiesSlice.reducer,
+        [cartSlice.name]: cartSlice.reducer
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({ serializableCheck: false }).concat(baseApi.middleware),

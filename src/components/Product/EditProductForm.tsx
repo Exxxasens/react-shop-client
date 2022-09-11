@@ -18,11 +18,13 @@ import InputDescription from '../ui/InputDescription';
 import ProductImageUploader from './ProductImageUploader';
 import { withProduct } from '../hoc/withProduct';
 import withLoading from '../hoc/withLoading';
-import PropertySelect from './PropertySelect';
+import PropertySelect from '../Property/PropertySelect';
 import { useSearchParams } from 'react-router-dom';
 import Popup from '../Popup';
 import { SelectOption } from '../ChipSelect/ChipSelect';
 import CategoriesChipSelect from '../ChipSelect/CategoriesChipSelect';
+import { AuthMessage } from '../ui/AuthCard';
+import Message from '../ui/Message';
 
 const productFormSchema = zod.object({
     name: zod.string(),
@@ -87,6 +89,7 @@ interface EditProductFormProps {
 }
 
 const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
+    const [updateRequestInfo, setUpdateRequestInfo] = React.useState<string | null>(null);
     const [searchParams, setSearchParams] = useSearchParams();
     const [updateProduct, { isLoading }] = useUpdateProductMutation();
     const {
@@ -127,7 +130,7 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
     }
 
     function onSubmit(data: ProductFormSchema) {
-        console.log(data);
+        setUpdateRequestInfo(null);
         const update: IUpdateProduct = {
             ...data,
             properties: properties.map((item) => item._id),
@@ -139,6 +142,7 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
             .unwrap()
             .then((product) => {
                 console.log(product);
+                setUpdateRequestInfo("Товар успешно обновлен");
             })
             .catch((error) => {
                 console.log(error);
@@ -261,6 +265,9 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
                         )}
                     </Table>
                 </InputCard>
+                {updateRequestInfo && <RowContainer>
+                    <Message type="success" style={{ fontWeight: 600, fontSize: '0.95rem', color: "var(--primary-color)" }}>{updateRequestInfo}</Message>
+                </RowContainer>}
                 <RowContainer style={{ gap: '1rem' }}>
                     <LinkButton to="../">{'<-'} Назад</LinkButton>
                     <Button type="submit" variant="dark" disabled={isLoading}>
@@ -269,7 +276,6 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
                 </RowContainer>
             </ColumnContainer>
         </>
-
     );
 };
 

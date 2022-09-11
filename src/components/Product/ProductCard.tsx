@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import Button from '../ui/Button';
 import { Card } from '../ui/Card';
 import ColumnContainer from '../ui/ColumnContainer';
+import IMAGE_PLACEHOLDER from '../../static/image_placeholder.png'
 
 const ProductContainer = styled(Card)`
     display: flex;
@@ -78,7 +79,7 @@ interface ProductCardProps {
 const ProductCard = ({ product }: ProductCardProps) => {
     const [isHover, setHover] = React.useState(false);
     const { images, name } = product;
-    const imageURL = images[0] ? `/api/images/${images[0]}` : '/images/image_placeholder.png'
+    const imageURL = images[0] ? `/api/images/${images[0]}` : IMAGE_PLACEHOLDER
     const secondaryImage = images[1] ? `/api/images/${images[1]}` : imageURL;
     const formattedPrice = product.sellPrice.toLocaleString("ru-RU", {
         style: "currency",
