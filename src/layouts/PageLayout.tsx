@@ -2,10 +2,7 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 import ColumnContainer from '../components/ui/ColumnContainer';
-
-const Header = styled.h1`
-    margin: 2rem 0;
-`;
+import Heading from '../components/ui/Heading';
 
 export interface PageLaoutProps extends React.ComponentProps<typeof ColumnContainer> {
     title?: string;
@@ -15,7 +12,7 @@ export interface PageLaoutProps extends React.ComponentProps<typeof ColumnContai
 const PageLayout = ({ title, children, ...rest }: PageLaoutProps) => {
     return (
         <ColumnContainer style={{ padding: '1rem 2rem', width: '100%' }} {...rest}>
-            {title && <Header>{title}</Header>}
+            {title && <Heading>{title}</Heading>}
             {children}
             <Outlet />
         </ColumnContainer>

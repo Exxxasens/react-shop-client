@@ -1,10 +1,8 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
 import AuthLayout from '../../layouts/AuthLayout';
-import PageLayout from '../../layouts/PageLayout';
 import UserSidebarLayout from '../../layouts/UserSidebarLayout';
 import AllProducts from '../../pages/AllProducts';
-import Cart from '../../pages/Cart';
 import Product from '../../pages/Product';
 import ProductsByCategory from '../../pages/ProductsByCategory';
 import RegisterSuccess from '../../pages/RegisterSuccess';
@@ -15,6 +13,8 @@ import Logout from '../Logout';
 import Register from '../Register';
 import ColumnContainer from '../ui/ColumnContainer';
 import Header from '../ui/Header';
+import Checkout from '../../pages/Checkout';
+import CartPage from '../../pages/CartPage';
 
 const AppContainer = styled(ColumnContainer)`
     min-height: 100vh;
@@ -25,7 +25,7 @@ const UserApp = () => {
         <AppContainer>
             <Header></Header>
             <Routes>
-                <Route path="cart" element={<Cart />} />
+                <Route path="cart" element={<CartPage />} />
                 <Route path="auth" element={<AuthLayout />}>
                     <Route index element={<Navigate to="login" />} />
                     <Route path="login" element={<Login />} />
@@ -43,6 +43,7 @@ const UserApp = () => {
                     <Route path=':id' element={<Product />} />
                 </Route>
                 <Route path="register/success" element={<RegisterSuccess />} />
+                <Route path="checkout" element={<Checkout />} />
             </Routes>
         </AppContainer>
     );

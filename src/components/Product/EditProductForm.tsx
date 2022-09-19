@@ -142,6 +142,7 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
             .unwrap()
             .then((product) => {
                 console.log(product);
+                console.log("update request send")
                 setUpdateRequestInfo("Товар успешно обновлен");
             })
             .catch((error) => {
@@ -216,7 +217,7 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
                         </InputDescription>
                         <PropertiesList properties={properties} onRemove={removeProperty} />
                         <RowContainer style={{ marginTop: '0.5rem' }}>
-                            <Button variant="dark" onClick={showPropertyPopup}>
+                            <Button variant="dark" onClick={showPropertyPopup} type="button">
                                 Добавить свойство
                             </Button>
                         </RowContainer>

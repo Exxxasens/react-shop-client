@@ -124,6 +124,10 @@ const PropertySelect: React.FC<CreateProductOptionProps> = ({ onSelect, properti
         if (nameFormType === FormType.Create) {
             setNameFormType(FormType.Find);
         }
+
+        if (valueFormType === FormType.Create) {
+            setValueFormType(FormType.Find);
+        }
     }
 
     function onValueChange(e: React.ChangeEvent<HTMLSelectElement>) {

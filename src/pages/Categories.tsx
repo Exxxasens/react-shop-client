@@ -14,10 +14,10 @@ const buildTree = (categories: ICategory[]) => {
 
     categories.forEach(
         (item) =>
-            (table[item._id] = {
-                ...item,
-                children: []
-            } as ICategoryTreeItem)
+        (table[item._id] = {
+            ...item,
+            children: []
+        } as ICategoryTreeItem)
     );
 
     categories.forEach((item) => {
