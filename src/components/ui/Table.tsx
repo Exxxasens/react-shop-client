@@ -1,20 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
 
-export const TableWrapper = styled.div`
+export const TableWrapper = styled.table`
     display: table;
     border-radius: 0.5rem;
 
     border-collapse: collapse;
 `;
 
-export const Row = styled.div`
+export const Row = styled.tr`
     display: table-row;
     border-collapse: collapse;
     border-bottom: 1px solid rgb(237, 237, 237);
 `;
 
-export const Cell = styled.div`
+export const Cell = styled.td`
     display: table-cell;
     padding: 1rem 1rem;
     vertical-align: middle;
@@ -22,7 +22,7 @@ export const Cell = styled.div`
     color: #566a7f;
 `;
 
-export const TableHeader = styled.div`
+export const TableHeader = styled.tr`
     display: table-row;
     font-weight: bold;
     font-size: 12px;

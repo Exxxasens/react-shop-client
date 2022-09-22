@@ -17,6 +17,8 @@ import { useForm } from "react-hook-form";
 import * as zod from 'zod';
 import { zodResolver } from "@hookform/resolvers/zod";
 import InputError from "../components/ui/InputError";
+import { useCreateOrderMutation } from "../api/orderApi";
+import { useNavigate } from "react-router-dom";
 
 const InputLoading = () => {
     return <ContentLoader
@@ -43,8 +45,10 @@ type CheckoutSchema = zod.infer<typeof checkoutSchema>;
 
 const Checkout = () => {
     const { user, isLoading } = useAuth();
+    const [requestInfo, setRequestInfo] = React.useState<string>("");
+    const navigate = useNavigate();
     const { products } = useAppSelector(state => state.cart);
-
+    const [createOrder, { isLoading: isCreatingOrder }] = useCreateOrderMutation();
     const { register, handleSubmit, setValue, formState: { errors } } = useForm<CheckoutSchema>({
         resolver,
         shouldUnregister: true,
@@ -74,18 +78,20 @@ const Checkout = () => {
     }
 
     function onSubmit(data: CheckoutSchema) {
-        // make request to submit data
         if (products.length === 0) { // cart is empty
             return null;
         }
-        const payload = {
-            cart: products,
-            ...data
-        }
-        console.log(payload)
-    }
 
-    console.log(errors)
+        createOrder({
+            ...data,
+            products: products.map(item => ({ count: item.count, product: item.product._id }))
+        }).unwrap()
+            .then(() => navigate("/checkout/success"))
+            .catch((error) => {
+                setRequestInfo(error.message);
+            })
+
+    }
 
     return <PageLayout>
         <ColumnContainer style={{ justifyContent: 'center', alignItems: 'center' }}>

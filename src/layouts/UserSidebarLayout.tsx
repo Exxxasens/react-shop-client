@@ -16,7 +16,7 @@ const UserSidebarLayout = ({ children }: UserSidebarLayoutProps) => {
             <Sidebar style={{ gap: '1rem' }}>
                 {isLoading ? <SidebarTagLoading /> : user && <SidebarTag name={user.name} />}
                 <SidebarLink
-                    to="order"
+                    to="orders"
                     title="Мои заказы"
                     icon={<FiPackage />}
                     style={{ marginTop: '2rem' }}

@@ -1,4 +1,4 @@
-import { FiLogOut, FiList, FiPackage } from 'react-icons/fi';
+import { FiLogOut, FiList, FiPackage, FiArrowLeft } from 'react-icons/fi';
 import { Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
 import PageLayout from '../../layouts/PageLayout';
@@ -10,6 +10,7 @@ import RowContainer from '../ui/RowContainer';
 import ContextMenu from '../ContextMenu/ContextMenu';
 import EditProduct from '../../pages/EditProduct';
 import Categories from '../../pages/Categories';
+import Tag from '../ui/Tag';
 
 const AppContainer = styled(RowContainer)`
     min-height: 100vh;
@@ -29,6 +30,7 @@ const AdminApp = () => {
                     top: 0
                 }}
             >
+                <SidebarLink to="/" title="Перейти на сайт" icon={<FiArrowLeft />}></SidebarLink>
                 {isLoading ? <SidebarTagLoading /> : user && <SidebarTag name={user.name} />}
                 <SidebarLink
                     to="orders"
