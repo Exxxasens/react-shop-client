@@ -10,7 +10,6 @@ import RowContainer from '../ui/RowContainer';
 import ContextMenu from '../ContextMenu/ContextMenu';
 import EditProduct from '../../pages/EditProduct';
 import Categories from '../../pages/Categories';
-import Tag from '../ui/Tag';
 
 const AppContainer = styled(RowContainer)`
     min-height: 100vh;

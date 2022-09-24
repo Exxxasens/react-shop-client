@@ -118,6 +118,7 @@ declare global {
     interface IOrder {
         _id: string;
         user?: string | null;
+        email: string;
         fullName: string;
         products: {
             count: number;
@@ -135,6 +136,13 @@ declare global {
         status: string;
         createdAt: string;
         updatedAt: string;
+        address: {
+            region: string;
+            city: string;
+            street: string;
+            building: string;
+            postCode: string;
+        };
     }
 }
 

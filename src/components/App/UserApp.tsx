@@ -16,7 +16,8 @@ import Header from '../ui/Header';
 import Checkout from '../../pages/Checkout';
 import CartPage from '../../pages/CartPage';
 import PageLayout from '../../layouts/PageLayout';
-import UserOrderPage from '../../pages/UserOrderPage';
+import UserOrderList from '../../pages/UserOrderList';
+import Order from '../../pages/Order';
 
 const AppContainer = styled(ColumnContainer)`
     min-height: 100vh;
@@ -38,15 +39,18 @@ const UserApp = () => {
                     <Route index element={<UserAddress />} />
                     <Route path="address" element={<UserAddress />} />
                     <Route path="account" element={<UserAccount />} />
-                    <Route path="orders" element={<UserOrderPage />} />
+                    <Route path="orders" element={<UserOrderList />} />
                 </Route>
                 <Route path="category/:id" element={<ProductsByCategory />} />
-                <Route path="products" >
+                <Route path="products">
                     <Route path="all" element={<AllProducts />} />
-                    <Route path=':id' element={<Product />} />
+                    <Route path=":id" element={<Product />} />
+                </Route>
+                <Route path="order">
+                    <Route path=":id" element={<Order />} />
                 </Route>
                 <Route path="register/success" element={<RegisterSuccess />} />
-                <Route path="checkout" >
+                <Route path="checkout">
                     <Route index element={<Checkout />} />
                     <Route path="success" element={<PageLayout title="Заказ успешно создан" />} />
                 </Route>

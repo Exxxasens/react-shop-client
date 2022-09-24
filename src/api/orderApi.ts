@@ -1,4 +1,4 @@
-import { baseApi } from "./baseApi";
+import { baseApi } from './baseApi';
 
 export const orderApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
@@ -14,8 +14,14 @@ export const orderApi = baseApi.injectEndpoints({
                 url: '/order',
                 method: 'GET'
             })
+        }),
+        getOrder: builder.query<IOrder, string>({
+            query: (id: string) => ({
+                url: `/order/${id}`,
+                method: 'GET'
+            })
         })
     })
-})
+});
 
-export const { useCreateOrderMutation, useGetOrdersQuery } = orderApi
+export const { useCreateOrderMutation, useGetOrdersQuery, useGetOrderQuery } = orderApi;

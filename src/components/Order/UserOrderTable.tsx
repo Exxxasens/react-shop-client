@@ -1,7 +1,9 @@
 import React from 'react';
 import { FiArrowDown, FiArrowLeft, FiArrowRight, FiArrowUp } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useGetOrdersQuery } from '../../api/orderApi';
+import formatPrice from '../../utils/formatPrice';
 import ProductImage from '../Product/ProductImage';
 import Button from '../ui/Button';
 import { Card } from '../ui/Card';
@@ -54,14 +56,6 @@ const OrderRow = ({ order }: OrderRowProps) => {
         setExpand((e) => !e);
     }
 
-    function formatPrice(price: number) {
-        return price.toLocaleString('ru-RU', {
-            style: 'currency',
-            currency: 'RUB',
-            minimumFractionDigits: 0
-        });
-    }
-
     return (
         <>
             <Row>
@@ -84,7 +78,9 @@ const OrderRow = ({ order }: OrderRowProps) => {
                                 <FiArrowDown fontSize="1rem" />
                             )}
                         </SmallBtn>
-                        <SmallBtn>Подробнее</SmallBtn>
+                        <Link to={`/order/${order._id}`}>
+                            <SmallBtn>Подробнее</SmallBtn>
+                        </Link>
                     </CenteredContainer>
                 </Cell>
             </Row>
